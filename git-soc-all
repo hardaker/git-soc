@@ -1,0 +1,76 @@
+#!/bin/python
+
+import os
+import yaml
+import argparse
+import git
+
+def parse_args():
+    parser = argparse.ArgParse()
+
+def fix_data(data):
+    for field in ['args']:
+        if field not in data or data[field] == None:
+            data[field] = ''
+    print data
+    return data
+ 
+def read_yaml_file(filepath):
+    fh = open(filepath, "r")
+    data = yaml.load(fh)
+    return data
+
+def dirty_dir_options(filepath, results = []):
+    os.chdir(filepath)
+    print "  ... dirty ..."
+    results.append({ 'dir': filepath })
+
+    return results
+
+def run_get_clone_or_sync(data, echo="", results = []):
+    if 'gitrepos' in data:
+        data = data['gitrepos']
+    for dat in data:
+        dat = fix_data(dat)
+        print "----- " + dat['dir']
+        check_dir_status(dat['dir'], results)
+        os.system(echo + " git-clone-or-sync " + dat['args'] + " " + dat['repo'] + " " + dat['dir'])
+
+    return results
+
+def check_dir_status(path, results = []):
+    repo = git.Repo(path)
+    if repo.is_dirty():
+        dirty_dir_options(path, results)
+
+    return results
+
+def process_directory(dirpath, echo="", results = []):
+    for file in os.listdir(dirpath):
+        if (os.path.isfile(dirpath + "/" + file) and file[-3:] == "yml"):
+            data = read_yaml_file(dirpath + "/" + file)
+            run_get_clone_or_sync(data, echo, results)
+
+    return results
+
+def main():
+    #args = parse_args()
+    results = []
+    process_directory(os.environ['HOME'] + "/lib/git-soc.d/", results = results)
+    print "done:"
+    for dir in results:
+        print "  dirty: " + dir['dir']
+
+def test():
+    dat = read_yaml_file(os.environ['HOME'] + "/lib/git-soc.d/org.yml")
+    print dat
+    run_get_clone_or_sync(dat, echo="echo")
+
+    print "dir:"
+    results = []
+    print "results:"
+    process_directory(os.environ['HOME'] + "/lib/git-soc.d/", "echo", results)
+    print results
+
+#test()
+main()

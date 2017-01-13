@@ -20,11 +20,11 @@ What can do I when switching between them?
 
     # cd ~/somewhere
 	# git soc register work/somewhere
-    -- registering ~/lib/git-soc/work/somewhere.yml
+    -- registering ~/lib/git-soc.d/work/somewhere.yml
     
     # cd ~/lib/org
 	# git soc register personal/org
-    -- registering ~/lib/git-soc/personal/org.yml
+    -- registering ~/lib/git-soc.d/personal/org.yml
     
     # git soc
     -- starting repo ~/lib/somewhere using work/somewhere.yml
