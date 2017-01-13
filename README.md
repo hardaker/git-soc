@@ -46,6 +46,10 @@ What can do I when switching between them?
   monolithic file)
 * Easy configuration (automatic but yaml if needed)
 * Support for bootstrapping with ansible
+* ideally multiple-commands at once in the background, stopping for
+  interative when needed on some repos
+* Startup from just a set of yaml files retrieved from another machine 
+  (after a new yaml files are found, it should auto-clone everything)
 
 # Why not others
 
@@ -60,6 +64,19 @@ managing a single tree of a lot of repos.  Similar to:
   management tool for the android toolkit.  Again, a large-tree
   collection but with poor documentation.
 
+* [myrepos](https://myrepos.branchable.com/)
+
+* [gr](https://github.com/mixu/gr):
+
+* [mu](https://fabioz.github.io/mu-repo/): if there was one I would
+  emulate as much as possible, it's this one.  It's support for
+  parallelism is something I want to copy.  But that has no interactive
+  support and it's configuration isn't splittable.
+
 * [gitsync](https://github.com/simonthum/git-sync): I used this for a
   while and it supports a good registration mechanism, but is entirely
   automatic and doesn't support annex.
+
+# other good reading
+
+* [how to manage a large number of git repos](https://www.quora.com/Is-there-an-easy-way-to-manage-a-lot-of-git-repositories)
