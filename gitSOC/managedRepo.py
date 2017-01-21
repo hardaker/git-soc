@@ -5,7 +5,6 @@ import git
 class ManagedRepo(git.Repo):
 
     def __init__(self, path):
-        print "path: " + path
         git.Repo.__init__(self, path)
         self._path = path
         
