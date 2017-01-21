@@ -40,16 +40,16 @@ What can do I when switching between them?
 
 * Easy registration of new repos
 * Supports `git annex` for large files
-* Interactive (none of the options below are)
+* Interactive (none of the other available options listed below are)
 * Config files for repos in individual files
   * (easier to sync portions of repo sets around, rather than one
-  monolithic file)
-* Easy configuration (automatic but yaml if needed)
+  monolithic config file)
+* Easy configuration (automatic but editing yaml is possible if needed)
 * Support for bootstrapping with ansible
 * ideally multiple-commands at once in the background, stopping for
   interative when needed on some repos
 * Startup from just a set of yaml files retrieved from another machine 
-  (after a new yaml files are found, it should auto-clone everything)
+  (after a new yaml files are found, it should auto-clone everything needed)
 
 # Why not others
 
