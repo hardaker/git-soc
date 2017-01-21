@@ -58,7 +58,12 @@ collection of git repos, but they all don't quite match what I needed,
 so I'm starting a new one.
 
 * [antlink](https://ant.isi.edu/software/antlink/) - great for
-managing a single tree of a lot of repos.  Similar to:
+managing a single tree of a lot of repos, with support for partial
+tree-branch checkouts (the default) and grafting of external gitrepos.
+Still a single place for a tree root to exist (though you could
+symlink in).  Doesn't support `git annex`.  We hope to support antlink
+sub-trees within git-soc.  Antlink is somewhat similar to but
+different than:
 
 * [repo](https://source.android.com/source/using-repo.html) - the repo
   management tool for the android toolkit.  Again, a large-tree
