@@ -12,13 +12,20 @@ class GitSOC(object):
         print self.repos
 
     def print_dirty_status(self):
+        self.foreach_repo(self.print_is_dirty)
+
+
+    def print_is_dirty(self, repo, otherargs = None):
+        state = "not dirty"
+        if repo.is_dirty():
+            state = "dirty"
+
+        print("%-60s %s" % (repo.path(), state))
+
+    def foreach_repo(self, operator, otherargs = None):
         for repo in self.repos:
-            state = "not dirty"
-            if repo.is_dirty():
-                state = "dirty"
-
-            print("%-60s %s" % (repo.path(), state))
-
+            operator(repo, otherargs)
+        
 
     def read_yaml_file(self, filepath):
         fh = open(filepath, "r")
