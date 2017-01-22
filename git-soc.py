@@ -12,7 +12,7 @@ args = sys.argv
 # pull off the real command
 cmd = args[1]
 print cmd
-print args
+print "args: " + str(args)
 
 # drop the exec file and the command name
 args = args[2:]

@@ -11,12 +11,38 @@ class Register(gitSOC.cmd.Cmd):
     def __init__(self):
         gitSOC.cmd.Cmd.__init__(self)
 
-    def parse_args(self):
+    def parse_args(self, args):
         p = argparse.ArgumentParser()
         p.add_argument("dir", type=str)
-        return p.parse_args
+        return p.parse_args(args = args)
 
     def run(self, args):
-        args = self.parse_args()
+        args = self.parse_args(args)
+        if 'dir' not in args:
+            print "a file name to save it in must be passed"
+            exit(1)
+
+        args.dir = args.dir + ".yml"
+        self.verbose("registering '" + os.getcwd() + "' in '" + args.dir + "'")
+
         repo = git.Repo(os.getcwd())
-        print repo
+
+        # convert the current repo info into yaml
+        output = { 'gitrepos':
+                   [{
+                       'dir':  str(os.getcwd()),
+                       'args': ''
+                   }]}
+        repodata = output['gitrepos'][0]
+
+        remotes=repo.remotes
+        for remote in remotes:
+            if remote.name == 'origin':
+                urls = remote.urls
+                url = urls.next()
+                repodata['url'] = str(url)
+
+        # save the yaml
+        file = open(args.dir, "w")
+        out = yaml.safe_dump(output,default_flow_style=False)
+        file.write(out)
