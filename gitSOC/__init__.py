@@ -4,7 +4,7 @@ import os
 
 class GitSOC(object):
 
-    def __init__(self, paths):
+    def __init__(self, paths = []):
         self.repos = []
         for path in paths:
             self.repos.append(managedRepo.ManagedRepo(path))
@@ -39,6 +39,11 @@ class GitSOC(object):
                 for repoconfig in data['gitrepos']:
                     self.repos.append(managedRepo.ManagedRepo(repoconfig['dir']))
 
+    def parse_global_args(self):
+        baseargs = {
+            'base': '/home/hardaker/lib/gitrepos.d'
+        }
+        return baseargs
         
 
 if __name__ == "__main__":

@@ -8,8 +8,9 @@ import os
 
 class Register(gitSOC.cmd.Cmd):
 
-    def __init__(self):
-        gitSOC.cmd.Cmd.__init__(self)
+    def __init__(self, baseargs = {}):
+        print "herer: " + str(baseargs)
+        gitSOC.cmd.Cmd.__init__(self, baseargs)
 
     def parse_args(self, args):
         p = argparse.ArgumentParser()
@@ -22,7 +23,7 @@ class Register(gitSOC.cmd.Cmd):
             print "a file name to save it in must be passed"
             exit(1)
 
-        args.dir = args.dir + ".yml"
+        args.dir = self.get_config_path(args.dir)
         self.verbose("registering '" + os.getcwd() + "' in '" + args.dir + "'")
 
         repo = git.Repo(os.getcwd())
