@@ -41,7 +41,7 @@ class GitSOC(object):
 
     def parse_global_args(self):
         baseargs = {
-            'base': '/home/hardaker/lib/gitrepos.d'
+            'base': os.environ['HOME'] + '/lib/gitrepos.d'
         }
         return baseargs
         
@@ -49,7 +49,8 @@ class GitSOC(object):
 if __name__ == "__main__":
     mrs = GitSOC(["."])
     print mrs
-    mrs.print_dirty_status()    
+    mrs.print_dirty_status()
 
-    mrs.load_config_directory("/home/hardaker/lib/gitrepos.d")
+    baseargs = mrs.parse_global_args()
+    mrs.load_config_directory(baseargs['base'])
     mrs.print_dirty_status()    
