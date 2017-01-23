@@ -45,6 +45,23 @@ class GitSOC(object):
         }
         return baseargs
         
+    def pick_one(self, baseprompt, options):
+        prompt = ""
+        table = {}
+        selected = None
+
+        for option in options:
+            first = option[0]
+            therest = option[1:]
+            prompt = prompt + ", (" + first + ")" + therest
+            table[first] = option
+
+        # drop the leading comma and add the prefix
+        prompt = baseprompt + prompt[1:] + ": "
+
+        while selected not in table:
+            selected = raw_input(prompt)
+        return selected
 
 if __name__ == "__main__":
     mrs = GitSOC(["."])
@@ -54,3 +71,5 @@ if __name__ == "__main__":
     baseargs = mrs.parse_global_args()
     mrs.load_config_directory(baseargs['base'])
     mrs.print_dirty_status()    
+
+    print "got: " + mrs.pick_one("pick one", ["apple", "bananna", "Camel"])
