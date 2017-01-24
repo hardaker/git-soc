@@ -8,6 +8,7 @@ import gitSOC.cmd.register
 import gitSOC.cmd.status
 import gitSOC.cmd.pull
 import gitSOC.cmd.push
+import gitSOC.cmd.pushpull
 import sys
 
 soc = gitSOC.GitSOC()
@@ -30,6 +31,8 @@ elif cmd == 'pull':
     cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
 elif cmd == 'push':
     cmd = gitSOC.cmd.push.Push(soc, baseargs = baseargs)
+elif cmd == 'pushpull' or cmd == "pp":
+    cmd = gitSOC.cmd.pushpull.PushPull(soc, baseargs = baseargs)
 else:
     print("unknown command: " + cmd)
     exit(1)
