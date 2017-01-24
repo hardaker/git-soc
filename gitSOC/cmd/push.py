@@ -6,27 +6,27 @@ import argparse
 import git
 import os
 
-class Pull(gitSOC.cmd.Cmd):
+class Push(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
-    def pull(self, repo, args = None):
+    def push(self, repo, args = None):
         result = self.check_clean(repo)
-        if result is "clean":
+        if result == "clean" or result == "won't: dirty":
             try:
                 remote = repo.remote()
                 if remote:
-                    remote.pull()
-                    result = "pulled"
+                    remote.push()
+                    result = "pushed"
                 else:
                     result = "no remote - weird bug"
             except:
-                result = "won't ; no origin"
+                result = "won't: no origin"
             
         print("%-60s %s" % (repo.path(), result))
 
     def run(self, args):
-        self.soc.foreach_repo(self.pull, args)
+        self.soc.foreach_repo(self.push, args)
         
 
