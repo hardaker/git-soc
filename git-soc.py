@@ -6,6 +6,7 @@ import gitSOC
 import argparse
 import gitSOC.cmd.register
 import gitSOC.cmd.status
+import gitSOC.cmd.pull
 import sys
 
 soc = gitSOC.GitSOC()
@@ -24,6 +25,8 @@ if cmd == 'register':
     cmd = gitSOC.cmd.register.Register(soc, baseargs = baseargs)
 elif cmd == 'status':
     cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
+elif cmd == 'pull':
+    cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
 else:
     print("unknown command: " + cmd)
     exit(1)
