@@ -14,3 +14,8 @@ class Cmd(object):
 
     def get_config_path(self, name):
         return self.get_config('base') + "/" + name + ".yml"
+
+    def parse_args(self, args):
+        pass
+
+    
