@@ -1,8 +1,9 @@
 
 class Cmd(object):
-    def __init__(self, baseargs = {}):
+    def __init__(self, soc, baseargs = {}):
         print "init: " + str(baseargs)
         self.baseargs = baseargs
+        self.soc = soc
 
     def verbose(self, stuff):
         print stuff

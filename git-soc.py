@@ -5,29 +5,29 @@
 import gitSOC
 import argparse
 import gitSOC.cmd.register
+import gitSOC.cmd.status
 import sys
 
 soc = gitSOC.GitSOC()
 baseargs = soc.parse_global_args()
-print "parsed: " + str(baseargs)
+soc.load_config_directory(baseargs['base'])
 
 args = sys.argv
-# drop the exec command
+
 # pull off the real command
 cmd = args[1]
-print cmd
-print "args: " + str(args)
 
 # drop the exec file and the command name
 args = args[2:]
-print args
-
 
 if cmd == 'register':
-    cmd = gitSOC.cmd.register.Register(baseargs = baseargs)
+    cmd = gitSOC.cmd.register.Register(soc, baseargs = baseargs)
+elif cmd == 'status':
+    cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
 else:
     print("unknown command: " + cmd)
     exit(1)
     
-cmd.run(args)
+parsed_args = cmd.parse_args(args)
+cmd.run(parsed_args)
 
