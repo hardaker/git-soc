@@ -11,17 +11,6 @@ class GitSOC(object):
 
         print self.repos
 
-    def print_dirty_status(self):
-        self.foreach_repo(self.print_is_dirty)
-
-
-    def print_is_dirty(self, repo, otherargs = None):
-        state = "not dirty"
-        if repo.is_dirty():
-            state = "dirty"
-
-        print("%-60s %s" % (repo.path(), state))
-
     def foreach_repo(self, operator, otherargs = None):
         for repo in self.repos:
             operator(repo, otherargs)
@@ -66,10 +55,10 @@ class GitSOC(object):
 if __name__ == "__main__":
     mrs = GitSOC(["."])
     print mrs
-    mrs.print_dirty_status()
+    #mrs.print_dirty_status()
 
     baseargs = mrs.parse_global_args()
     mrs.load_config_directory(baseargs['base'])
-    mrs.print_dirty_status()    
+    #mrs.print_dirty_status()    
 
     print "got: " + mrs.pick_one("pick one", ["apple", "bananna", "Camel"])
