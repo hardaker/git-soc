@@ -28,15 +28,20 @@ class Status(gitSOC.cmd.Cmd):
         if args.verbose:
             print("  %-10s: %s" % ("branch:", repo.active_branch))
             print("  %-10s: %s" % ("head:", repo.head))
+            print("  %-10s: %s" % ("branch:", repo.active_branch))
             try:
                 remote = repo.remote()
                 if remote:
-                    print("  %-10s: %s" % ("remote:", remote.name))
+                    print("  %-10s: %s" % ("origin:", remote.name))
             except:
                 pass
+
+            print "  remotes:"
+            for remote in repo.remotes:
+                print("    %-10s" % (remote.name))
+                
             
     def run(self, args):
-        print args
         self.soc.foreach_repo(self.print_repo_status, args)
         
 
