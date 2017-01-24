@@ -12,7 +12,8 @@ class GitSOC(object):
         print self.repos
 
     def foreach_repo(self, operator, otherargs = None):
-        for repo in self.repos:
+        sortedrepos = sorted(self.repos, key=lambda k: k.path())
+        for repo in sortedrepos:
             operator(repo, otherargs)
         
 
