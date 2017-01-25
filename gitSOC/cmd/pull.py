@@ -12,17 +12,28 @@ class Pull(gitSOC.cmd.Cmd):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
     def pull(self, repo, args = None):
+
+        # check whether or not we have cloned it at all first
+        if not os.path.isdir(repo.path()):
+            # this has not yet been pulled at all; clone instead
+            self.verbose("cloning " + repo.url() + " into " + repo.path())
+            result = git.Repo.clone_from(repo.url(), repo.path())
+            repo.init_repo()
+            print("%-60s %s" % (repo.path(), "cloned"))
+
+        # check if it's dirty
         result = self.check_clean(repo)
         if result is "clean":
             try:
+                # do the actual pull
                 remote = repo.remote()
                 print "pulling...."
                 if remote:
                     x = remote.pull()
-                    print("  pull result: " + str(x))
-                    print("  old: " + str(x[0].old_commit))
-                    print("  new: " + str(x[0].commit))
-                    print("  flags:" + str(x[0].flags))
+                    self.verbose("  pull result: " + str(x))
+                    self.verbose("  old: " + str(x[0].old_commit))
+                    self.verbose("  new: " + str(x[0].commit))
+                    self.verbose("  flags:" + str(x[0].flags))
                     result = "pulled"
                 else:
                     result = "no remote - weird bug"

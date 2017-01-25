@@ -59,6 +59,8 @@ mkmod() {
     popd
 }   
 
+########################################
+
 cleanandinit
 
 title" making repos"
@@ -95,3 +97,8 @@ gitsoc pull
 
 title "push"
 gitsoc push
+
+cat $base/repo1.w1.yml | sed 's/w1/w3/' > $base/repo1.w3.yml
+
+title "pull a new directory"
+gitsoc pull
