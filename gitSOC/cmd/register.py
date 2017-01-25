@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# note: requirse python2-GitPython, not just "GitPython"
+
 import yaml
 import gitSOC.cmd
 import argparse
