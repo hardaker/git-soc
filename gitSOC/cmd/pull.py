@@ -16,8 +16,13 @@ class Pull(gitSOC.cmd.Cmd):
         if result is "clean":
             try:
                 remote = repo.remote()
+                print "pulling...."
                 if remote:
-                    remote.pull()
+                    x = remote.pull()
+                    print("  pull result: " + str(x))
+                    print("  old: " + str(x[0].old_commit))
+                    print("  new: " + str(x[0].commit))
+                    print("  flags:" + str(x[0].flags))
                     result = "pulled"
                 else:
                     result = "no remote - weird bug"

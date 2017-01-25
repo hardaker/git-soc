@@ -13,7 +13,6 @@ import sys
 
 soc = gitSOC.GitSOC()
 baseargs = soc.parse_global_args()
-soc.load_config_directory(baseargs['base'])
 
 args = sys.argv
 
@@ -38,5 +37,6 @@ else:
     exit(1)
     
 parsed_args = cmd.parse_args(args)
+soc.load_config_directory(parsed_args.base)
 cmd.run(parsed_args)
 

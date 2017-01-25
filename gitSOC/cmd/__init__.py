@@ -1,23 +1,19 @@
+import argparse
 
 class Cmd(object):
     def __init__(self, soc, baseargs = {}):
         print "init: " + str(baseargs)
         self.baseargs = baseargs
         self.soc = soc
+        self.global_parser = None
 
     def verbose(self, stuff):
         print stuff
 
-    def get_config(self, name):
-        if self.baseargs and name in self.baseargs:
-            return self.baseargs[name]
-        return None
-
-    def get_config_path(self, name):
-        return self.get_config('base') + "/" + name + ".yml"
-
     def parse_args(self, args):
-        pass
+        parser = self.get_global_parse_args()
+        args = parser.parse_args(args)
+        return args
 
     def check_clean(self, repo):
         if str(repo.active_branch) != "master":
@@ -27,4 +23,12 @@ class Cmd(object):
             return "won't: dirty"
         else:
             return "clean"
+
+    def get_global_parse_args(self):
+        if not self.global_parser:
+            global_defaults  = self.soc.parse_global_args()
+            self.global_parser = argparse.ArgumentParser(add_help=False)
+            self.global_parser.add_argument("--base","-B",
+                                            default=global_defaults['base'])
+        return self.global_parser
 

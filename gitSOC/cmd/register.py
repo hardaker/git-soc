@@ -12,15 +12,16 @@ class Register(gitSOC.cmd.Cmd):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
     def parse_args(self, args):
-        p = argparse.ArgumentParser()
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()])
         p.add_argument("dir", type=str)
-        parsed_arges = p.parse_args(args = args)
-        if 'dir' not in args:
+        parsed_args = p.parse_args(args = args)
+        if 'dir' not in parsed_args:
             print "a file name to save it in must be passed"
             exit(1)
+        return parsed_args
 
     def run(self, args):
-        args.dir = self.get_config_path(args.dir)
+        args.dir = args.base + "/" + args.dir + ".yml"
         self.verbose("registering '" + os.getcwd() + "' in '" + args.dir + "'")
 
         repo = git.Repo(os.getcwd())

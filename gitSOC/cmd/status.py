@@ -12,7 +12,8 @@ class Status(gitSOC.cmd.Cmd):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
     def parse_args(self, args):
-        p = argparse.ArgumentParser()
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()])
+        #p = argparse.ArgumentParser()
         p.add_argument("--verbose", "-v",
                        action="store_true",
                        help="Verbose mode")

@@ -17,7 +17,12 @@ class Push(gitSOC.cmd.Cmd):
             try:
                 remote = repo.remote()
                 if remote:
-                    remote.push()
+                    x = remote.push()
+                    print(x)
+                    print("  push result: " + str(x))
+                    print("  old: " + str(x[0].old_commit))
+                    print("  new: " + str(x[0].remote_ref_string))
+                    print("  summary:" + str(x[0].summary))
                     result = "pushed"
                 else:
                     result = "no remote - weird bug"
