@@ -9,8 +9,6 @@ class GitSOC(object):
         for path in paths:
             self.repos.append(managedRepo.ManagedRepo(path))
 
-        print self.repos
-
     def foreach_repo(self, operator, otherargs = None):
         sortedrepos = sorted(self.repos, key=lambda k: k.path())
         for repo in sortedrepos:

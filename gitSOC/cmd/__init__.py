@@ -2,7 +2,6 @@ import argparse
 
 class Cmd(object):
     def __init__(self, soc, baseargs = {}):
-        print "init: " + str(baseargs)
         self.baseargs = baseargs
         self.soc = soc
         self.global_parser = None
