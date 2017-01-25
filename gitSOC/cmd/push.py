@@ -23,7 +23,7 @@ class Push(gitSOC.cmd.Cmd):
                     print("  old: " + str(x[0].old_commit))
                     print("  new: " + str(x[0].remote_ref_string))
                     print("  summary:" + str(x[0].summary))
-                    result = "pushed"
+                    result = str(x[0].summary)
                 else:
                     result = "no remote - weird bug"
             except:
