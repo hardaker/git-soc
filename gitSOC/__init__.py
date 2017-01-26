@@ -26,6 +26,8 @@ class GitSOC(object):
                 data = self.read_yaml_file(directory + "/" + file)
                 for repoconfig in data['gitrepos']:
                     self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'], repoconfig['url']))
+            elif (os.path.isdir(directory + "/" + file)):
+                self.load_config_directory(directory + "/" + file)
 
     def parse_global_args(self):
         baseargs = {
