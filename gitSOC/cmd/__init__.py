@@ -1,4 +1,6 @@
 import argparse
+import subprocess
+import os
 
 class Cmd(object):
     def __init__(self, soc, baseargs = {}):
@@ -31,3 +33,10 @@ class Cmd(object):
                                             default=global_defaults['base'])
         return self.global_parser
 
+    def run_cmd(self, command, dir=None):
+        cwd = os.getcwd()
+        if dir:
+            os.chdir(dir)
+        subprocess.call(command)
+        if dir:
+            os.chdir(cwd)
