@@ -42,6 +42,24 @@ class Cmd(object):
         if path:
             os.chdir(cwd)
 
+    def pick_one(self, baseprompt, options):
+        prompt = ""
+        table = {}
+        selected = None
+
+        for option in options:
+            first = option[0]
+            therest = option[1:]
+            prompt = prompt + ", (" + first + ")" + therest
+            table[first] = option
+
+        # drop the leading comma and add the prefix
+        prompt = baseprompt + prompt[1:] + ": "
+
+        while selected not in table:
+            selected = raw_input(prompt)
+        return selected
+
     # XXX: might be better in ManagedRepo?
     def maybe_auto_commit(self, repo):
         if (repo.auto_commit()):
