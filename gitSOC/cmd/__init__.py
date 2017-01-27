@@ -42,7 +42,7 @@ class Cmd(object):
         if path:
             os.chdir(cwd)
 
-    def pick_one(self, baseprompt, options):
+    def pick_one(self, baseprompt, options, default = None):
         prompt = ""
         table = {}
         selected = None
@@ -50,7 +50,10 @@ class Cmd(object):
         for option in options:
             first = option[0]
             therest = option[1:]
+
             prompt = prompt + ", (" + first + ")" + therest
+            if default and first == default:
+                prompt = prompt + " [default]"
             table[first] = option
 
         # drop the leading comma and add the prefix
@@ -58,6 +61,8 @@ class Cmd(object):
 
         while selected not in table:
             selected = raw_input(prompt)
+            if selected == '' and default:
+                selected = default
         return selected
 
     # XXX: might be better in ManagedRepo?
