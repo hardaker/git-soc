@@ -15,6 +15,7 @@ class Cmd(gitSOC.cmd.Cmd):
 
     def parse_args(self, args):
         p = argparse.ArgumentParser(parents=[self.get_global_parse_args()])
+        p.add_argument("--seperator", "-s", action="store_true")
         p.add_argument("command", type=str)
         parsed_args = p.parse_args(args = args)
         if 'command' not in parsed_args:
@@ -22,9 +23,12 @@ class Cmd(gitSOC.cmd.Cmd):
             exit(1)
         return parsed_args
 
-    def cmd(self, repo, cmd):
-        self.run_cmd(cmd, repo.path())
+    def cmd(self, repo, args):
+        if args['seperator']:
+            print "--- " + repo.path()
+        self.run_cmd(args['cmd'], repo.path())
 
     def run(self, args):
-        print("running command: " + args.command)
-        self.soc.foreach_repo(self.cmd, args.command.split())
+        self.verbose("running command: " + args.command)
+        self.soc.foreach_repo(self.cmd, { "cmd": args.command.split(),
+                                          'seperator': args.seperator} )
