@@ -30,7 +30,7 @@ class Cmd(gitSOC.cmd.Cmd):
 
         # interactive 'ask' mode
         if args.ask:
-            result = self.pick_one("Run here: ", ['yes', 'no', 'quit'])
+            result = self.pick_one("Run here: ", ['yes', 'no', 'quit'], default = 'y')
             if result == 'n':
                 return
             elif result == 'q':
