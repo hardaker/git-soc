@@ -12,7 +12,14 @@ class Push(gitSOC.cmd.Cmd):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
     def push(self, repo, args = None):
+
         result = self.check_clean(repo)
+
+        # maybe do auto commits
+        if result == "won't: dirty":
+            self.maybe_auto_commit(repo)
+            result = self.check_clean(repo)
+
         if result == "clean" or result == "won't: dirty":
             try:
                 remote = repo.remote()

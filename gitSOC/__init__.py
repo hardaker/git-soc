@@ -25,7 +25,16 @@ class GitSOC(object):
             if (os.path.isfile(directory + "/" + file) and file[-3:] == "yml"):
                 data = self.read_yaml_file(directory + "/" + file)
                 for repoconfig in data['gitrepos']:
-                    self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'], repoconfig['url']))
+                    if 'dir' not in repoconfig or 'url' not in repoconfig:
+                        print("Error in " + directory + "/" + file)
+                        print("both 'dir' and 'url' are required components")
+                    else:
+                        auto_commit = False
+                        if 'auto_commit' in repoconfig:
+                            auto_commit = repoconfig['auto_commit']
+                        self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'],
+                                                                  repoconfig['url'],
+                                                                  auto_commit))
             elif (os.path.isdir(directory + "/" + file)):
                 self.load_config_directory(directory + "/" + file)
 

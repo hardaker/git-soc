@@ -23,6 +23,13 @@ class Pull(gitSOC.cmd.Cmd):
 
         # check if it's dirty
         result = self.check_clean(repo)
+
+        # maybe do auto commits
+        if result == "won't: dirty":
+            self.maybe_auto_commit(repo)
+            result = self.check_clean(repo)
+
+        # if we're clean, pull away
         if result is "clean":
             try:
                 # do the actual pull

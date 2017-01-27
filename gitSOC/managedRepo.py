@@ -5,10 +5,12 @@ import os
 
 class ManagedRepo(git.Repo):
 
-    def __init__(self, path, url = None):
+    def __init__(self, path, url = None, auto_commit = False):
         self._path = path
         self._initialized = False
         self._url = url
+        self._auto_commit = auto_commit
+
         self.init_repo()
 
     def init_repo(self):
@@ -32,6 +34,9 @@ class ManagedRepo(git.Repo):
     def url(self):
         return self._url
     
+    def auto_commit(self):
+        return self._auto_commit
+
 if __name__ == "__main__":
     mr = ManagedRepo(".")
     print(mr)

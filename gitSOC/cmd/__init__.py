@@ -33,10 +33,17 @@ class Cmd(object):
                                             default=global_defaults['base'])
         return self.global_parser
 
-    def run_cmd(self, command, dir=None):
+    def run_cmd(self, command, path=None):
         cwd = os.getcwd()
-        if dir:
-            os.chdir(dir)
+        if path:
+            os.chdir(path)
+        self.verbose("running '" + " ".join(command) + "' in " + path)
         subprocess.call(command)
-        if dir:
+        if path:
             os.chdir(cwd)
+
+    # XXX: might be better in ManagedRepo?
+    def maybe_auto_commit(self, repo):
+        if (repo.auto_commit()):
+            self.verbose("auto_commit in " + repo.path())
+            self.run_cmd(['git', 'commit', '-m', 'git-soc autocommit', '-a'], repo.path())
