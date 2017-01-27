@@ -3,18 +3,22 @@ import subprocess
 import os
 
 class Cmd(object):
-    def __init__(self, soc, baseargs = {}):
+    def __init__(self, soc, baseargs = {}, description = "", name=""):
         self.baseargs = baseargs
         self.soc = soc
         self.global_parser = None
+        self.description = description
+        self.name = name
 
     def verbose(self, stuff):
         print stuff
 
     def parse_args(self, args):
-        parser = self.get_global_parse_args()
-        args = parser.parse_args(args)
-        return args
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
+                                    description=self.description,
+                                    prog="git-soc " + self.name)
+        parsed_args = p.parse_args(args = args)
+        return parsed_args
 
     def check_clean(self, repo):
         if str(repo.active_branch) != "master":
@@ -28,7 +32,8 @@ class Cmd(object):
     def get_global_parse_args(self):
         if not self.global_parser:
             global_defaults  = self.soc.parse_global_args()
-            self.global_parser = argparse.ArgumentParser(add_help=False)
+            self.global_parser = argparse.ArgumentParser(add_help=False,
+                                                         description=self.description)
             self.global_parser.add_argument("--base","-B",
                                             default=global_defaults['base'])
         return self.global_parser

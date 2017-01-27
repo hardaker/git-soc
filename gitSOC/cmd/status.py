@@ -7,12 +7,15 @@ import git
 import os
 
 class Status(gitSOC.cmd.Cmd):
+    """Command class to check the status of all the git repos"""
 
     def __init__(self, soc, baseargs = {}):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
     def parse_args(self, args):
-        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()])
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
+                                    prog="status",
+                                    description="Get the status of all the git repositories loaded from 'base'.")
         #p = argparse.ArgumentParser()
         p.add_argument("--verbose", "-v",
                        action="store_true",

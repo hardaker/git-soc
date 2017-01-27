@@ -9,29 +9,34 @@ import git
 import os
 
 class Register(gitSOC.cmd.Cmd):
+    """Command class to register new repos within the base directory
+
+    This creates a new yml file for the registered repo/directory/name"""
 
     def __init__(self, soc, baseargs = {}):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
 
     def parse_args(self, args):
-        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()])
-        p.add_argument("dir", type=str)
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
+                                    prog="git-soc register",
+                                    description="Registers the current git repository as a new YAML file in the 'base' directory (defaults to ~/lib/gitrepos.d).  Requires a name, which .yml will be appended to before saving.")
+        p.add_argument("name", type=str)
         parsed_args = p.parse_args(args = args)
-        if 'dir' not in parsed_args:
+        if 'name' not in parsed_args:
             print "a file name to save it in must be passed"
             exit(1)
         return parsed_args
 
     def run(self, args):
-        args.dir = args.base + "/" + args.dir + ".yml"
-        self.verbose("registering '" + os.getcwd() + "' in '" + args.dir + "'")
+        args.name = args.base + "/" + args.name + ".yml"
+        self.verbose("registering '" + os.getcwd() + "' in '" + args.name + "'")
 
         repo = git.Repo(os.getcwd())
 
         # convert the current repo info into yaml
         output = { 'gitrepos':
                    [{
-                       'dir':  str(os.getcwd()),
+                       'name':  str(os.getcwd()),
                        'args': ''
                    }]}
         repodata = output['gitrepos'][0]
@@ -44,6 +49,6 @@ class Register(gitSOC.cmd.Cmd):
                 repodata['url'] = str(url)
 
         # save the yaml
-        file = open(args.dir, "w")
+        file = open(args.name, "w")
         out = yaml.safe_dump(output,default_flow_style=False)
         file.write(out)

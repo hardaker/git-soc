@@ -9,7 +9,8 @@ import os
 class Pull(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
-        gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
+        gitSOC.cmd.Cmd.__init__(self, soc, baseargs, name="pull",
+                                description = "Runs the equivelent of 'git pull' on every registered repository found in 'base'.\n\nNote: This refused to pull into a directory directory at this time.")
 
     def pull(self, repo, args = None):
 

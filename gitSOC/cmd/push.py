@@ -9,7 +9,8 @@ import os
 class Push(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
-        gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
+        gitSOC.cmd.Cmd.__init__(self, soc, baseargs, name="push",
+                                description = "Runs the equivelent of 'git push' in every registered repository found in 'base'.\n\nIf the 'auto_commit' property is true, it will attempt a commit of everything modified before pushing.")
 
     def push(self, repo, args = None):
 

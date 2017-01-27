@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-# XXX: eventually this will be renamed to straight git-soc
-
 import gitSOC
 import argparse
 import gitSOC.cmd.register
