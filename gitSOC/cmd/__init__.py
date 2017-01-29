@@ -11,8 +11,11 @@ class Cmd(object):
         self.name = name
 
     def verbose(self, stuff):
-        print stuff
+        print(stuff)
 
+    def output(self, stuff):
+        print(stuff)
+        
     def parse_args(self, args):
         p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
                                     description=self.description,

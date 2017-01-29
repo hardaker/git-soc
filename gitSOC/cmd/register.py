@@ -29,7 +29,6 @@ class Register(gitSOC.cmd.Cmd):
 
     def run(self, args):
         args.name = args.base + "/" + args.name + ".yml"
-        self.verbose("registering '" + os.getcwd() + "' in '" + args.name + "'")
 
         repo = git.Repo(os.getcwd())
 
@@ -48,7 +47,13 @@ class Register(gitSOC.cmd.Cmd):
                 url = urls.next()
                 repodata['url'] = str(url)
 
+        if 'url' not in repodata:
+            print("unable to register this repository -- it has no remote 'origin'")
+            exit(1)
+
         # save the yaml
         file = open(args.name, "w")
         out = yaml.safe_dump(output,default_flow_style=False)
         file.write(out)
+
+        self.verbose("-- registering '" + os.getcwd() + "' in '" + args.name + "'")
