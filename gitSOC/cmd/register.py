@@ -35,7 +35,7 @@ class Register(gitSOC.cmd.Cmd):
         # convert the current repo info into yaml
         output = { 'gitrepos':
                    [{
-                       'name':  str(os.getcwd()),
+                       'dir':  str(os.getcwd()),
                        'args': ''
                    }]}
         repodata = output['gitrepos'][0]
