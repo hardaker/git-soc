@@ -23,7 +23,7 @@ args = args[2:]
 
 if cmd == 'register':
     cmd = gitSOC.cmd.register.Register(soc, baseargs = baseargs)
-elif cmd == 'status':
+if cmd == 'status':
     cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
 elif cmd == 'pull':
     cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
@@ -33,6 +33,38 @@ elif cmd == 'pushpull' or cmd == "pp":
     cmd = gitSOC.cmd.pushpull.PushPull(soc, baseargs = baseargs)
 elif cmd == 'command' or cmd == "cmd":
     cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
+elif cmd == "-h" or cmd == "--help" or cmd == "help":
+    print("Usage: " + sys.argv[0] + " COMMAND [-B basedir] <COMMAND ARGS>")
+    print("Commands available:")
+    print("    " + "\n    ".join(["register","status","pull","push","pushpull","command"]))
+    print("\nSee the --help output of each command for further details")
+    exit(0)
+elif cmd == "man":
+    cmd = gitSOC.cmd.register.Register(soc, baseargs = baseargs)
+    cmd.parse_args(["-h"])
+    print("---")
+
+    cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
+    cmd.parse_args(["-h"])
+    print("---")
+
+    cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
+    cmd.parse_args(["-h"])
+    print("---")
+
+    cmd = gitSOC.cmd.push.Push(soc, baseargs = baseargs)
+    cmd.parse_args(["-h"])
+    print("---")
+
+    cmd = gitSOC.cmd.pushpull.PushPull(soc, baseargs = baseargs)
+    cmd.parse_args(["-h"])
+    print("---")
+
+    cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
+    cmd.parse_args(["-h"])
+    print("---")
+
+
 else:
     print("unknown command: " + cmd)
     exit(1)
