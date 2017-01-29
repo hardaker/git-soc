@@ -35,7 +35,8 @@ class Cmd(object):
             self.global_parser = argparse.ArgumentParser(add_help=False,
                                                          description=self.description)
             self.global_parser.add_argument("--base","-B",
-                                            default=global_defaults['base'])
+                                            default=global_defaults['base'],
+                                            help="Directory where YAML config files are found")
         return self.global_parser
 
     def run_cmd(self, command, path=None):
