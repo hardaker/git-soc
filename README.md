@@ -24,8 +24,7 @@ work?  What can do I when switching between them?
     # cd ~
     # git soc status
     /home/hardaker/lib/org                                        
-    /home/hardaker/src/git-soc                                   d
-        *(d = dirty)*
+    /home/hardaker/src/git-soc                                   d (= dirty)
 
     # git soc push
     /home/hardaker/src/git-soc                                   fae63ca..0bb41cb
