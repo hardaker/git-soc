@@ -1,12 +1,3 @@
-# Incomplete project!!!
-
-**NOTE:** This project is a template.  Not for public use yet, but will be
-soon.  Drop me a line or an issue if it looks interesting and I'll
-speed up where I can.
-
-The files here are the hacking bash-wrapping versions that got me
-thinking about the large project yet to come.
-
 # Design Goal
 
 I wanted a tool to help manage logging into lots of systems with lots
@@ -71,7 +62,7 @@ work?  What can do I when switching between them?
 
 - annex support
 
-## Features
+## (Eventual) Features
 
 * Easy registration of new repos
 * Supports `git annex` for large files
