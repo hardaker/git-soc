@@ -37,7 +37,7 @@ work?  What can do I when switching between them?
     # git soc pushpull
     ... the same as both the above two commands ...
 
-    # git soc cmd "ls .git"
+    # git soc cmd -a -s "ls .git"
     running command: ls .git
     --- /home/hardaker/lib/org
     Run here:  (y)es [default], (n)o, (q)uit: y
