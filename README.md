@@ -54,11 +54,12 @@ work?  What can do I when switching between them?
 ## Usage to be done
 
 - sync
-
-    # git soc sync
-    ... [interactive commit/add/push/pull] ...
-
+  - ... [interactive commit/add/push/pull] ...
+- add known files
 - annex support
+- register with other arguments
+  - auto_commit: always commits dirty files (push supports this today)
+  - auto_add
 
 ## (Eventual) Features
 
