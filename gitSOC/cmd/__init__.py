@@ -9,20 +9,16 @@ class Cmd(object):
         self.global_parser = None
         self.description = description
         self.name = name
+        self._verbose = False
+        self.base = ""
 
     def verbose(self, stuff):
-        print(stuff)
+        if self.verbose:
+            print(stuff)
 
     def output(self, stuff):
         print(stuff)
         
-    def parse_args(self, args):
-        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
-                                    description=self.description,
-                                    prog="git-soc " + self.name)
-        parsed_args = p.parse_args(args = args)
-        return parsed_args
-
     def check_clean(self, repo):
         if str(repo.active_branch) != "master":
             self.verbose("  clean check: [branch is '" + str(repo.active_branch) + "' and not 'master']")
@@ -32,6 +28,14 @@ class Cmd(object):
         else:
             return "clean"
 
+    def parse_args(self, args):
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
+                                    description=self.description,
+                                    prog="git-soc " + self.name)
+        parsed_args = p.parse_args(args = args)
+        self.register_parsed_args(parsed_args)
+        return parsed_args
+
     def get_global_parse_args(self):
         if not self.global_parser:
             global_defaults  = self.soc.parse_global_args()
@@ -40,7 +44,16 @@ class Cmd(object):
             self.global_parser.add_argument("--base","-B",
                                             default=global_defaults['base'],
                                             help="Directory where YAML config files are found")
+            self.global_parser.add_argument("--verbose", "-v",
+                                            action="store_true",
+                                            help="Verbose mode")
         return self.global_parser
+
+
+    def register_parsed_args(self, args):
+        self.parsed_args = args
+        self._verbose = args.verbose
+        self.base    = args.base
 
     def run_cmd(self, command, path=None):
         cwd = os.getcwd()

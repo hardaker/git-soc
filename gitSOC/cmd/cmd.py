@@ -24,6 +24,7 @@ class Cmd(gitSOC.cmd.Cmd):
                        help="interactively ask before running each command")
         p.add_argument("command", type=str)
         parsed_args = p.parse_args(args = args)
+        self.register_parsed_args(parsed_args)
         if 'command' not in parsed_args:
             print "a command to run must be passed"
             exit(1)

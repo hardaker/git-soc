@@ -17,10 +17,8 @@ class Status(gitSOC.cmd.Cmd):
                                     prog="status",
                                     description="Get the status of all the git repositories loaded from 'base'.")
         #p = argparse.ArgumentParser()
-        p.add_argument("--verbose", "-v",
-                       action="store_true",
-                       help="Verbose mode")
         parsed_args = p.parse_args(args = args)
+        self.register_parsed_args(parsed_args)
         return parsed_args
 
     def print_repo_status(self, repo, args = None):
@@ -29,14 +27,14 @@ class Status(gitSOC.cmd.Cmd):
             state = "d"
 
         print("%-60s %s" % (repo.path(), state))
-        if args.verbose:
+        if self._verbose:
             print("  %-10s: %s" % ("branch:", repo.active_branch))
             print("  %-10s: %s" % ("head:", repo.head))
             print("  %-10s: %s" % ("branch:", repo.active_branch))
             try:
                 remote = repo.remote()
                 if remote:
-                    print("  %-10s: %s" % ("origin:", remote.name))
+                    print("  %-10s: %s" % ("remote:", remote.name))
             except:
                 pass
 
