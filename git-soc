@@ -33,6 +33,12 @@ elif cmd == 'pushpull' or cmd == "pp":
     cmd = gitSOC.cmd.pushpull.PushPull(soc, baseargs = baseargs)
 elif cmd == 'command' or cmd == "cmd":
     cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
+elif cmd == 'diff':
+    cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
+    args = ["git diff"]
+elif cmd == 'git':
+    cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
+    args[0] = "git " + args[0]
 elif cmd == "-h" or cmd == "--help" or cmd == "help":
     print("Usage: " + sys.argv[0] + " COMMAND [-B basedir] <COMMAND ARGS>")
     print("Commands available:")
