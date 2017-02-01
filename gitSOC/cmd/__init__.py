@@ -13,7 +13,7 @@ class Cmd(object):
         self.base = ""
 
     def verbose(self, stuff):
-        if self.verbose:
+        if self._verbose:
             print(stuff)
 
     def output(self, stuff):
