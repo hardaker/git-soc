@@ -35,7 +35,7 @@ class Pull(gitSOC.cmd.Cmd):
             try:
                 # do the actual pull
                 remote = repo.remote()
-                print "pulling...."
+                self.verbose("pulling " + repo.path() + ":")
                 if remote:
                     x = remote.pull()
                     self.verbose("  pull result: " + str(x))
