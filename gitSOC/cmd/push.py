@@ -26,18 +26,17 @@ class Push(gitSOC.cmd.Cmd):
                 remote = repo.remote()
                 if remote:
                     x = remote.push()
-                    print(x)
-                    print("  push result: " + str(x))
-                    print("  old: " + str(x[0].old_commit))
-                    print("  new: " + str(x[0].remote_ref_string))
-                    print("  summary:" + str(x[0].summary))
+                    self.verbose("  push result: " + str(x))
+                    self.verbose("  old: " + str(x[0].old_commit))
+                    self.verbose("  new: " + str(x[0].remote_ref_string))
+                    self.verbose("  summary:" + str(x[0].summary))
                     result = str(x[0].summary)
                 else:
                     result = "no remote - weird bug"
             except:
                 result = "won't: no origin"
             
-        print("%-60s %s" % (repo.path(), result))
+        self.output("%-60s %s" % (repo.path(), result))
 
     def run(self, args):
         self.soc.foreach_repo(self.push, args)
