@@ -17,6 +17,8 @@ class Status(gitSOC.cmd.Cmd):
                                     prog="status",
                                     description="Get the status of all the git repositories loaded from 'base'.")
         #p = argparse.ArgumentParser()
+        p.add_argument("-d", "--only-dirty", action="store_true",
+                       help="Only report repos with something to report")
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         return parsed_args
@@ -25,6 +27,9 @@ class Status(gitSOC.cmd.Cmd):
         state = " "
         if repo.is_dirty():
             state = "d"
+
+        if state == " " and args.only_dirty:
+            return
 
         print("%-60s %s" % (repo.path(), state))
         if self._verbose:
