@@ -60,7 +60,7 @@ class Cmd(object):
         self.base    = args.base
         self.regex   = args.regex
 
-        if not (re.match("^\^",self.regex) or re.match("\$$",self.regex)):
+        if self.regex and not (re.match("^\^",self.regex) or re.match("\$$",self.regex)):
             self.regex = ".*" + self.regex + ".*"
 
     def run_cmd(self, command, path=None):
