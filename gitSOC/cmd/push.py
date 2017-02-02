@@ -36,6 +36,7 @@ class Push(gitSOC.cmd.Cmd):
             except:
                 result = "won't: no origin"
             
+        result = result.strip()
         self.output("%-60s %s" % (repo.path(), result))
 
     def run(self, args):
