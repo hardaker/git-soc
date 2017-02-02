@@ -1,6 +1,7 @@
 import argparse
 import subprocess
 import os
+import re
 
 class Cmd(object):
     def __init__(self, soc, baseargs = {}, description = "", name=""):
@@ -11,6 +12,7 @@ class Cmd(object):
         self.name = name
         self._verbose = False
         self.base = ""
+        self.regex = None
 
     def verbose(self, stuff):
         if self._verbose:
@@ -44,6 +46,8 @@ class Cmd(object):
             self.global_parser.add_argument("--base","-B",
                                             default=global_defaults['base'],
                                             help="Directory where YAML config files are found")
+            self.global_parser.add_argument("--regex","-R",
+                                            help="Regexp to limit repos to use")
             self.global_parser.add_argument("--verbose", "-v",
                                             action="store_true",
                                             help="Verbose mode")
@@ -54,6 +58,10 @@ class Cmd(object):
         self.parsed_args = args
         self._verbose = args.verbose
         self.base    = args.base
+        self.regex   = args.regex
+
+        if not (re.match("^\^",self.regex) or re.match("\$$",self.regex)):
+            self.regex = ".*" + self.regex + ".*"
 
     def run_cmd(self, command, path=None):
         cwd = os.getcwd()

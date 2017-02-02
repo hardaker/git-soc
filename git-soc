@@ -50,6 +50,6 @@ else:
     exit(1)
     
 parsed_args = cmd.parse_args(args)
-soc.load_config_directory(parsed_args.base)
+soc.load_config_directory(parsed_args.base, cmd)
 cmd.run(parsed_args)
 

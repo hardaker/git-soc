@@ -1,6 +1,7 @@
 import managedRepo
 import yaml
 import os
+import re
 
 class GitSOC(object):
 
@@ -20,7 +21,7 @@ class GitSOC(object):
         data = yaml.load(fh)
         return data
 
-    def load_config_directory(self, directory):
+    def load_config_directory(self, directory, cmd):
         for file in os.listdir(directory):
             if (os.path.isfile(directory + "/" + file) and file[-3:] == "yml"):
                 data = self.read_yaml_file(directory + "/" + file)
@@ -29,14 +30,15 @@ class GitSOC(object):
                         print("Error in " + directory + "/" + file)
                         print("both 'dir' and 'url' are required components")
                     else:
-                        auto_commit = False
-                        if 'auto_commit' in repoconfig:
-                            auto_commit = repoconfig['auto_commit']
-                        self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'],
-                                                                  repoconfig['url'],
-                                                                  auto_commit))
+                        if cmd.regex is None or re.match(cmd.regex, repoconfig['dir']):
+                            auto_commit = False
+                            if 'auto_commit' in repoconfig:
+                                auto_commit = repoconfig['auto_commit']
+                            self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'],
+                                                                      repoconfig['url'],
+                                                                      auto_commit))
             elif (os.path.isdir(directory + "/" + file)):
-                self.load_config_directory(directory + "/" + file)
+                self.load_config_directory(directory + "/" + file, cmd)
 
     def parse_global_args(self):
         baseargs = {
