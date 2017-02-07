@@ -40,12 +40,24 @@ class ManagedRepo(git.Repo):
     def is_dirty(self):
         if not self._initialized:
             return False
+
         return git.Repo.is_dirty(self)
 
     def needs_push(self):
+        if not self._initialized:
+            return False
+
+        head = self.commit()
+
+        if self.merge_base("origin/master", head)[0] != head:
+            return True
+
         return False
 
     def needs_merge(self):
+        if not self._initialized:
+            return False
+
         return False
 
 if __name__ == "__main__":
