@@ -37,6 +37,11 @@ class ManagedRepo(git.Repo):
     def auto_commit(self):
         return self._auto_commit
 
+    def is_dirty(self):
+        if not self._initialized:
+            return False
+        return git.Repo.is_dirty(self)
+
 if __name__ == "__main__":
     mr = ManagedRepo(".")
     print(mr)
