@@ -24,14 +24,21 @@ work?  What can do I when switching between them?
     # cd ~
     # git soc status
     /home/hardaker/lib/org                                        
-    /home/hardaker/src/git-soc                                   d (= dirty)
+    /home/hardaker/src/git-soc                                   d<>
+                                                                 (d = dirty)
+                                                                 (> = needs push)
+                                                                 (< = needs merge)
 
     # git soc push
     /home/hardaker/src/git-soc                                   fae63ca..0bb41cb
     /home/hardaker/lib/org                                       [up to date]
 
-    # git soc pull
+    # git soc fetch
     /home/hardaker/lib/org                                       pulled
+    /home/hardaker/src/git-soc                                   won't: dirty
+
+    # git soc pull
+    /home/hardaker/lib/org                                       92e6422..831ba44
     /home/hardaker/src/git-soc                                   won't: dirty
 
     # git soc pushpull
