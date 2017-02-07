@@ -22,6 +22,8 @@ class Cmd(object):
         print(stuff)
         
     def check_clean(self, repo):
+        if not repo._initialized:
+            return "needs clone"
         if str(repo.active_branch) != "master":
             self.verbose("  clean check: [branch is '" + str(repo.active_branch) + "' and not 'master']")
             return "won't: not master"

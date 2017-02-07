@@ -21,7 +21,13 @@ class Push(gitSOC.cmd.Cmd):
             self.maybe_auto_commit(repo)
             result = self.check_clean(repo)
 
-        if result == "clean" or result == "won't: dirty":
+        if result == "needs clone":
+            pass
+
+        elif not repo.needs_push():
+            result = "[up to date]"
+
+        elif result == "clean" or result == "won't: dirty":
             try:
                 remote = repo.remote()
                 if remote:
@@ -35,7 +41,7 @@ class Push(gitSOC.cmd.Cmd):
                     result = "no remote - weird bug"
             except:
                 result = "won't: no origin"
-            
+    
         result = result.strip()
         self.output("%-60s %s" % (repo.path(), result))
 

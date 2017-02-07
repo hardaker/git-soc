@@ -58,6 +58,14 @@ class ManagedRepo(git.Repo):
         if not self._initialized:
             return False
 
+        head = self.commit()
+        origin = self.commit('origin/master')
+
+        if head != origin:
+            # if we're the merge base then we're behind
+            if self.merge_base(origin, head)[0] == head:
+                return True
+        
         return False
 
 if __name__ == "__main__":

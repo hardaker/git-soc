@@ -4,6 +4,7 @@ import gitSOC
 import argparse
 import gitSOC.cmd.register
 import gitSOC.cmd.status
+import gitSOC.cmd.fetch
 import gitSOC.cmd.pull
 import gitSOC.cmd.push
 import gitSOC.cmd.pushpull
@@ -27,6 +28,8 @@ elif cmd == 'status':
     cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
 elif cmd == 'pull':
     cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
+elif cmd == 'fetch':
+    cmd = gitSOC.cmd.fetch.Fetch(soc, baseargs = baseargs)
 elif cmd == 'push':
     cmd = gitSOC.cmd.push.Push(soc, baseargs = baseargs)
 elif cmd == 'pushpull' or cmd == "pp":

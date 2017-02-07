@@ -37,12 +37,17 @@ class Pull(gitSOC.cmd.Cmd):
                 remote = repo.remote()
                 self.verbose("pulling " + repo.path() + ":")
                 if remote:
+                    oldcommit = repo.commit()
                     x = remote.pull()
+                    newcommit = repo.commit()
                     self.verbose("  pull result: " + str(x))
                     self.verbose("  old: " + str(x[0].old_commit))
                     self.verbose("  new: " + str(x[0].commit))
                     self.verbose("  flags:" + str(x[0].flags))
-                    result = "pulled"
+                    if oldcommit != newcommit:
+                        result=oldcommit[0:6] + ".." + newcommit[0:6]
+                    else:
+                        result = "[up to date]"
                 else:
                     result = "no remote - weird bug"
             except:
