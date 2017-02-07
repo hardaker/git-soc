@@ -46,13 +46,13 @@ class Pull(gitSOC.cmd.Cmd):
                     self.verbose("  new: " + str(x[0].commit))
                     self.verbose("  flags:" + str(x[0].flags))
                     if oldcommit != newcommit:
-                        result=oldcommit[0:6] + ".." + newcommit[0:6]
+                        result = oldcommit[0:6] + ".." + newcommit[0:6]
                     else:
                         result = "[up to date]"
                 else:
                     result = "no remote - weird bug"
             except:
-                result = "won't ; no origin"
+                result = "tried - crashed"
             
         print("%-60s %s" % (repo.path(), result))
 
