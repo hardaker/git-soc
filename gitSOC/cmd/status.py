@@ -24,14 +24,22 @@ class Status(gitSOC.cmd.Cmd):
         return parsed_args
 
     def print_repo_status(self, repo, args = None):
-        state = " "
+        dirty = " "
+        merge = " "
+        push = " "
         if repo.is_dirty():
-            state = "d"
+            dirty = "d"
 
-        if state == " " and args.only_dirty:
+        if repo.needs_push():
+            push = ">"
+
+        if repo.needs_merge():
+            merge = "<"
+
+        if args.only_dirty and not (dirty != " " or push != " " or merge != " "):
             return
 
-        print("%-60s %s" % (repo.path(), state))
+        print("%-60s %s%s%s" % (repo.path(), dirty, merge, push))
         if self._verbose:
             print("  %-10s: %s" % ("branch:", repo.active_branch))
             print("  %-10s: %s" % ("head:", repo.head))

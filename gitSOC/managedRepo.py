@@ -42,6 +42,12 @@ class ManagedRepo(git.Repo):
             return False
         return git.Repo.is_dirty(self)
 
+    def needs_push(self):
+        return False
+
+    def needs_merge(self):
+        return False
+
 if __name__ == "__main__":
     mr = ManagedRepo(".")
     print(mr)
