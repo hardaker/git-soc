@@ -19,6 +19,8 @@ class Status(gitSOC.cmd.Cmd):
         #p = argparse.ArgumentParser()
         p.add_argument("-d", "--only-dirty", action="store_true",
                        help="Only report repos with something to report")
+        p.add_argument("-u", "--untracked", action="store_true",
+                       help="Check for untracked files too (slow)")
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         return parsed_args
@@ -27,19 +29,30 @@ class Status(gitSOC.cmd.Cmd):
         dirty = " "
         merge = " "
         push = " "
+        untracked = " "
+        report = False
+        
         if repo.is_dirty():
             dirty = "d"
-
+            report = True
+            
         if repo.needs_push():
             push = ">"
+            report = True
 
         if repo.needs_merge():
             merge = "<"
+            report = True
 
-        if args.only_dirty and not (dirty != " " or push != " " or merge != " "):
+        if args.untracked:
+            if repo.untracked_files:
+                untracked = "u"
+                report = True
+
+        if args.only_dirty and not report:
             return
 
-        print("%-60s %s%s%s" % (repo.path(), dirty, merge, push))
+        print("%-60s %s%s%s%s" % (repo.path(), dirty, merge, push, untracked))
         if self._verbose:
             print("  %-10s: %s" % ("branch:", repo.active_branch))
             print("  %-10s: %s" % ("head:", repo.head))
