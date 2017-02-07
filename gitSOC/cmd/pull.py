@@ -21,6 +21,7 @@ class Pull(gitSOC.cmd.Cmd):
             result = git.Repo.clone_from(repo.url(), repo.path())
             repo.init_repo()
             print("%-60s %s" % (repo.path(), "cloned"))
+            return
 
         # check if it's dirty
         result = self.check_clean(repo)
