@@ -49,7 +49,10 @@ class ManagedRepo(git.Repo):
 
         head = self.commit()
 
-        if self.merge_base("origin/master", head)[0] != head:
+        try:
+            if self.merge_base("origin/master", head)[0] != head:
+                return True
+        except:
             return True
 
         return False
@@ -59,12 +62,15 @@ class ManagedRepo(git.Repo):
             return False
 
         head = self.commit()
-        origin = self.commit('origin/master')
+        try:
+            origin = self.commit('origin/master')
 
-        if head != origin:
-            # if we're the merge base then we're behind
-            if self.merge_base(origin, head)[0] == head:
-                return True
+            if head != origin:
+                # if we're the merge base then we're behind
+                if self.merge_base(origin, head)[0] == head:
+                    return True
+        except:
+            return True
         
         return False
 
