@@ -31,12 +31,9 @@ class GitSOC(object):
                         print("both 'dir' and 'url' are required components")
                     else:
                         if cmd.regex is None or re.match(cmd.regex, repoconfig['dir']):
-                            auto_commit = False
-                            if 'auto_commit' in repoconfig:
-                                auto_commit = repoconfig['auto_commit']
                             self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'],
                                                                       repoconfig['url'],
-                                                                      auto_commit))
+                                                                      repoconfig))
             elif (os.path.isdir(directory + "/" + file)):
                 self.load_config_directory(directory + "/" + file, cmd)
 

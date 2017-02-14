@@ -5,12 +5,12 @@ import os
 
 class ManagedRepo(git.Repo):
 
-    def __init__(self, path, url = None, auto_commit = False):
+    def __init__(self, path, url = None, repoconfig = {}):
         self._path = path
         self._initialized = False
         self._url = url
-        self._auto_commit = auto_commit
-
+        self._config = repoconfig
+        
         self.init_repo()
 
     def init_repo(self):
@@ -34,6 +34,15 @@ class ManagedRepo(git.Repo):
     def url(self):
         return self._url
     
+    def get_config(self, name):
+        if name in self._config:
+            return self._config[name]
+        return None
+
+    def set_config(self, name):
+        # XXX: set now and save? just set and move save to different function?
+        pass
+
     def auto_commit(self):
         return self._auto_commit
 
