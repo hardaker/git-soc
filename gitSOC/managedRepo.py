@@ -37,11 +37,11 @@ class ManagedRepo(git.Repo):
     def auto_commit(self):
         return self._auto_commit
 
-    def is_dirty(self):
+    def is_dirty(self, index=True, working_tree=True):
         if not self._initialized:
             return False
 
-        return git.Repo.is_dirty(self)
+        return git.Repo.is_dirty(self, index = index, working_tree = working_tree)
 
     def needs_push(self):
         if not self._initialized:
