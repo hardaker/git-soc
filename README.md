@@ -58,6 +58,15 @@ work?  What can do I when switching between them?
     COMMIT_EDITMSG	    COMMIT_EDITMSG.~30~  description  hooks  logs      ORIG_HEAD    rr-cache
     COMMIT_EDITMSG.~1~  COMMIT_EDITMSG.~31~  FETCH_HEAD   index  MERGE_RR  packed-refs
 
+## Registration flags:
+
+These registration flags are supported today:
+
+### auto_commit:  true/false
+
+Auto-commits any outstanding chasges; useful constantly saved
+settings, files, emacs org files, etc.
+
 ## Usage to be done
 
 - sync
@@ -65,7 +74,6 @@ work?  What can do I when switching between them?
 - add known files
 - annex support
 - register with other arguments
-  - auto_commit: always commits dirty files (push supports this today)
   - auto_add
 
 ## (Eventual) Features
