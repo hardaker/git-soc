@@ -29,11 +29,16 @@ class Status(gitSOC.cmd.Cmd):
         dirty = " "
         merge = " "
         push = " "
+        index = " "
         untracked = " "
         report = False
         
         if repo.is_dirty():
             dirty = "d"
+            report = True
+            
+        if repo.is_dirty(index=False):
+            index = "+"
             report = True
             
         if repo.needs_push():
@@ -52,7 +57,7 @@ class Status(gitSOC.cmd.Cmd):
         if args.only_dirty and not report:
             return
 
-        print("%-60s %s%s%s%s" % (repo.path(), dirty, merge, push, untracked))
+        print("%-60s %s%s%s%s%s" % (repo.path(), dirty, index, merge, push, untracked))
         if self._verbose:
             print("  %-10s: %s" % ("branch:", repo.active_branch))
             print("  %-10s: %s" % ("head:", repo.head))
