@@ -41,25 +41,14 @@ class Register(gitSOC.cmd.Cmd):
                    [{
                        'dir':    str(repo.working_tree_dir),
                        'args':   '',
-                       'remote': args.remote
+                       'remote': args.remote,
+                       'name':   args.name,
                    }]}
         repodata = output['gitrepos'][0]
         linkname = repodata['dir'] + "/.git/git-soc.yml"
 
         # ensure this repo isn't registered somewhere
-        if os.path.islink(linkname):
-            print("error:       repository already registered; refusing to reregister")
-            print("see link:    '" + repodata['dir'] + "/.git/git-soc.yml'")
-            print("pointing to: '" + os.path.realpath(linkname) + "'")
-            return
-
-        if os.path.isdir(linkname) or os.path.isfile(linkname):
-            print("error: '" + linkname + " exists but isn't a symlink")
-            return
-
-        # ensure this registration doesn't exist yet 
-        if os.path.isfile(args.name):
-            print("error: '" + args.name + "' already exists")
+        if self.check_symlink(repodata, create = False) == False:
             return
 
         remotes=repo.remotes
@@ -84,6 +73,6 @@ class Register(gitSOC.cmd.Cmd):
         file.write(out)
 
         # create a sym link
-        os.symlink(args.name, linkname)
+        self.create_symlink(repodata)
 
         self.verbose("-- registering '" + os.getcwd() + "' in '" + args.name + "'")

@@ -65,6 +65,38 @@ class Cmd(object):
         if self.regex and not (re.match("^\^",self.regex) or re.match("\$$",self.regex)):
             self.regex = ".*" + self.regex + ".*"
 
+    def create_symlink(self, repodata):
+        linkname = repodata['dir'] + "/.git/git-soc.yml"
+
+        # create a sym link
+        if not os.path.islink(linkname):
+            os.symlink(repodata['name'], linkname)
+        
+    def check_symlink(self, repodata, create = True):
+        linkname = repodata['dir'] + "/.git/git-soc.yml"
+
+        # ensure this repo isn't registered somewhere
+        if os.path.islink(linkname):
+            print("error:       repository already registered; refusing to reregister")
+            print("see link:    '" + repodata['dir'] + "/.git/git-soc.yml'")
+            print("pointing to: '" + os.path.realpath(linkname) + "'")
+            return False
+
+        if os.path.isdir(linkname) or os.path.isfile(linkname):
+            print("error: '" + linkname + " exists but isn't a symlink")
+            return False
+
+        # ensure this registration doesn't exist yet 
+        if os.path.isfile(repodata['name']):
+            print("error: '" + repodata['name'] + "' already exists")
+            return False
+
+        # create a sym link
+        if create:
+            self.create_symlink(repodata)
+
+        return True
+
     def run_cmd(self, command, path=None):
         cwd = os.getcwd()
         if path:
