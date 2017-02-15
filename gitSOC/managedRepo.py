@@ -34,10 +34,10 @@ class ManagedRepo(git.Repo):
     def url(self):
         return self._url
     
-    def get_config(self, name):
+    def get_config(self, name, default = None):
         if name in self._config:
             return self._config[name]
-        return None
+        return default
 
     def set_config(self, name):
         # XXX: set now and save? just set and move save to different function?

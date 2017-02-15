@@ -62,10 +62,16 @@ work?  What can do I when switching between them?
 
 These registration flags are supported today:
 
-### auto_commit:  true/false
+### auto_commit:  true/false  (default = false)
 
 Auto-commits any outstanding chasges; useful constantly saved
 settings, files, emacs org files, etc.
+
+### clone: true/false (default: true)
+
+Whether or not to clone a repository if it doesn't exist.  By default,
+things are cloned but a repo YAML file may set "clone: false" to
+disable it from being pulled if it doesn't exist. 
 
 ## Usage to be done
 

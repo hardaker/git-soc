@@ -17,6 +17,11 @@ class Pull(gitSOC.cmd.Cmd):
         # check whether or not we have cloned it at all first
         if not os.path.isdir(repo.path()):
             # this has not yet been pulled at all; clone instead
+
+            if not repo.get_config('clone', True):
+                self.verbose("config/clone is off; refusing to pull");
+                return
+
             self.verbose("cloning " + repo.url() + " into " + repo.path())
             result = git.Repo.clone_from(repo.url(), repo.path())
             repo.init_repo()
