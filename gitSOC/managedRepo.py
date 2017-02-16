@@ -38,6 +38,15 @@ class ManagedRepo(git.Repo):
         repos = self.get_config("remotes", ['origin/master'])
         if not isinstance(repos, list):
             repos = [repos]
+
+        final_repos = []
+        for repo in repos:
+            details = repo.split("/")
+            final_repos.append({ 'name': details[0],
+                                 'branch': details[1] })
+
+        # XXX: error checking for all parts
+
         return repos
     
     def get_config(self, name, default = None):
