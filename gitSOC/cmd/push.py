@@ -40,7 +40,7 @@ class Push(gitSOC.cmd.Cmd):
                 else:
                     result = "no remote - weird bug"
             except:
-                result = "won't: no origin"
+                result = "won't: failed"
     
         result = result.strip()
         self.output("%-60s %s" % (repo.path(), result))
