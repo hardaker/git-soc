@@ -33,6 +33,12 @@ class ManagedRepo(git.Repo):
 
     def url(self):
         return self._url
+
+    def get_remotes(self):
+        repos = self.get_config("remotes", ['origin/master'])
+        if not isinstance(repos, list):
+            repos = [repos]
+        return repos
     
     def get_config(self, name, default = None):
         if name in self._config:
