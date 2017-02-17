@@ -47,7 +47,7 @@ class ManagedRepo(git.Repo):
 
         # XXX: error checking for all parts
 
-        return repos
+        return final_repos
     
     def get_config(self, name, default = None):
         if name in self._config:
@@ -71,9 +71,9 @@ class ManagedRepo(git.Repo):
         if not self._initialized:
             return False
 
-        head = self.commit()
-
         try:
+            head = self.commit()
+        
             if self.merge_base("origin/master", head)[0] != head:
                 return True
         except:
@@ -85,8 +85,8 @@ class ManagedRepo(git.Repo):
         if not self._initialized:
             return False
 
-        head = self.commit()
         try:
+            head = self.commit()
             origin = self.commit('origin/master')
 
             if head != origin:
@@ -97,6 +97,52 @@ class ManagedRepo(git.Repo):
             return True
         
         return False
+
+    def create_symlink(self):
+        linkname = self.get_config('dir') + "/.git/git-soc.yml"
+
+        # create a sym link
+        save_name = self.get_config('name')
+        if not os.path.islink(linkname) and save_name != None:
+            print "here" + save_name
+            if save_name[:3] == "../":
+                # relative link add in another ../
+                save_name = "../" + save_name
+            os.symlink(save_name, linkname)
+        
+    def check_symlink(self, create = True):
+        if not self.is_initialized():
+            return False
+
+        print self
+        repodir = self.get_config('dir')
+        name = self.get_config('name')
+        linkname = repodir + "/.git/git-soc.yml"
+
+        # ensure this repo isn't registered somewhere
+        if os.path.islink(linkname):
+            print("error:       repository already registered; refusing to reregister")
+            print("see link:    '" + repodir + "/.git/git-soc.yml'")
+            print("pointing to: '" + os.path.realpath(linkname) + "'")
+            return False
+
+        if os.path.isdir(linkname) or os.path.isfile(linkname):
+            print("error: '" + linkname + " exists but isn't a symlink")
+            return False
+
+        # ensure this registration doesn't exist yet 
+        if os.path.isfile(name):
+            print("error: '" + name + "' already exists")
+            return False
+
+        # create a sym link
+        if create:
+            self.create_symlink(repodata)
+
+        return True
+
+    def is_initialized(self):
+        return self._initialized
 
 if __name__ == "__main__":
     mr = ManagedRepo(".")

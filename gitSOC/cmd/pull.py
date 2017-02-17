@@ -26,7 +26,11 @@ class Pull(gitSOC.cmd.Cmd):
             result = git.Repo.clone_from(repo.url(), repo.path())
             repo.init_repo()
             print("%-60s %s" % (repo.path(), "cloned"))
+            repo.create_symlink()
             return
+
+        # make sure symlink is there and proper
+        repo.create_symlink()
 
         # check if it's dirty
         result = self.check_clean(repo)

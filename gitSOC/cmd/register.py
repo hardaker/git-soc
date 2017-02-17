@@ -4,6 +4,7 @@
 
 import yaml
 import gitSOC.cmd
+import gitSOC.managedRepo
 import argparse
 import git
 import os
@@ -34,21 +35,28 @@ class Register(gitSOC.cmd.Cmd):
     def run(self, args):
         args.name = args.base + "/" + args.name + ".yml"
 
+        # create a real repo to have it figure out the true base path
         repo = git.Repo(os.getcwd())
+        basepath = str(repo.working_tree_dir)
+        if not basepath:
+            print("unable to figure out a top base path for this supposed repo")
+            exit(1)
 
         # convert the current repo info into yaml
         output = { 'gitrepos':
                    [{
-                       'dir':    str(repo.working_tree_dir),
+                       'dir':    basepath,
                        'args':   '',
                        'remote': args.remote,
                        'name':   args.name,
                    }]}
         repodata = output['gitrepos'][0]
-        linkname = repodata['dir'] + "/.git/git-soc.yml"
+
+        repo = gitSOC.managedRepo.ManagedRepo(basepath, repoconfig = repodata)
+
 
         # ensure this repo isn't registered somewhere
-        if self.check_symlink(repodata, create = False) == False:
+        if repo.check_symlink(create = False) == False:
             return
 
         remotes=repo.remotes
@@ -73,6 +81,6 @@ class Register(gitSOC.cmd.Cmd):
         file.write(out)
 
         # create a sym link
-        self.create_symlink(repodata)
+        repo.create_symlink()
 
         self.verbose("-- registering '" + os.getcwd() + "' in '" + args.name + "'")
