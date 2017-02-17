@@ -19,7 +19,9 @@ class PushPull(gitSOC.cmd.Cmd):
         pullcmd = gitSOC.cmd.pull.Pull(self.soc, self.baseargs)
         pushcmd = gitSOC.cmd.push.Push(self.soc, self.baseargs)
 
+        print "Pulling: -----------------"
         pullcmd.run(args)
+        print "\nPushing: -----------------"
         pushcmd.run(args)
         
 
