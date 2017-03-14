@@ -60,6 +60,9 @@ class Pull(gitSOC.cmd.Cmd):
                             result = oldcommit[0:6] + ".." + newcommit[0:6]
                         else:
                             result = "[up to date]"
+                    except Exception as e:
+                        print e
+                        result = "failed"
                     except:
                         result = "failed"
 
