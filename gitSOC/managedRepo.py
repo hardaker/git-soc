@@ -71,15 +71,18 @@ class ManagedRepo(git.Repo):
         if not self._initialized:
             return False
 
-        try:
-            head = self.commit()
+        remotes = self.get_remotes()
+        result = False
+        for remote in remotes:
+            try:
+                head = self.commit()
         
-            if self.merge_base("origin/master", head)[0] != head:
-                return True
-        except:
-            return True
+                if self.merge_base(remote['name'] + "/" + remote['branch'], head)[0] != head:
+                    result = True
+            except:
+                result = True
 
-        return False
+        return result
 
     def needs_merge(self):
         if not self._initialized:
