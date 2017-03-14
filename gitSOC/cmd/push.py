@@ -39,6 +39,9 @@ class Push(gitSOC.cmd.Cmd):
                     result = str(x[0].summary)
                 else:
                     result = "no remote - weird bug"
+            except Exception as e:
+                print e
+                result = "failed"
             except:
                 result = "won't: failed"
     

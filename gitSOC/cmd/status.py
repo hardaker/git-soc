@@ -66,6 +66,8 @@ class Status(gitSOC.cmd.Cmd):
                 remote = repo.remote()
                 if remote:
                     print("  %-10s: %s" % ("remote:", remote.name))
+            except Exception as e:
+                print e
             except:
                 pass
 
