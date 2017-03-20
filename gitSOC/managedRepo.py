@@ -67,7 +67,7 @@ class ManagedRepo(git.Repo):
 
         return git.Repo.is_dirty(self, index = index, working_tree = working_tree)
 
-    def needs_push(self):
+    def needs_push(self, verbose = False):
         if not self._initialized:
             return False
 
@@ -77,12 +77,12 @@ class ManagedRepo(git.Repo):
         for remote in remotes:
             try:
                 head = self.commit()
-        
-                # print head
-                # print ".."
-                # print self.merge_base(remote['name'] + "/" + remote['branch'], head)
+                merge_base = self.merge_base(remote['name'] + "/" + remote['branch'], head)[0]
+                if verbose:
+                    print " cur head:   " + head
+                    print " merge_base: " + merge_base
 
-                if self.merge_base(remote['name'] + "/" + remote['branch'], head)[0] != head:
+                if merge_base != head:
                     result = True
             except:
                 result = True

@@ -41,7 +41,7 @@ class Status(gitSOC.cmd.Cmd):
             index = "+"
             report = True
             
-        if repo.needs_push():
+        if repo.needs_push(verbose = args.verbose):
             push = ">"
             report = True
 
