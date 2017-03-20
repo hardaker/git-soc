@@ -28,22 +28,23 @@ class Push(gitSOC.cmd.Cmd):
             result = "[up to date]"
 
         elif result == "clean" or result == "won't: dirty":
-            try:
-                remote = repo.remote()
-                if remote:
-                    x = remote.push()
-                    self.verbose("  push result: " + str(x))
-                    self.verbose("  old: " + str(x[0].old_commit))
-                    self.verbose("  new: " + str(x[0].remote_ref_string))
-                    self.verbose("  summary:" + str(x[0].summary))
-                    result = str(x[0].summary)
-                else:
-                    result = "no remote - weird bug"
-            except Exception as e:
-                print e
-                result = "failed"
-            except:
-                result = "won't: failed"
+            for remotedef in self.get_remotes():
+                try:
+                    remote = repo.remote(remotedef['remote'])
+                    if remote:
+                        x = remote.push()
+                        self.verbose("  push result: " + str(x))
+                        self.verbose("  old: " + str(x[0].old_commit))
+                        self.verbose("  new: " + str(x[0].remote_ref_string))
+                        self.verbose("  summary:" + str(x[0].summary))
+                        result = str(x[0].summary)
+                    else:
+                        result = "no remote - weird bug"
+                except Exception as e:
+                    print e
+                    result = "failed"
+                except:
+                    result = "won't: failed"
     
         result = result.strip()
         self.output("%-60s %s" % (repo.path(), result))
