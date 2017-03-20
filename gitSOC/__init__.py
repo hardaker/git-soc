@@ -13,6 +13,8 @@ class GitSOC(object):
     def foreach_repo(self, operator, otherargs = None):
         sortedrepos = sorted(self.repos, key=lambda k: k.path())
         for repo in sortedrepos:
+            if otherargs.verbose:
+                print "------- " + repo.path()
             operator(repo, otherargs)
         
 
