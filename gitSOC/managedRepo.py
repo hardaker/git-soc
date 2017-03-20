@@ -73,10 +73,15 @@ class ManagedRepo(git.Repo):
 
         remotes = self.get_remotes()
         result = False
+
         for remote in remotes:
             try:
                 head = self.commit()
         
+                # print head
+                # print ".."
+                # print self.merge_base(remote['name'] + "/" + remote['branch'], head)
+
                 if self.merge_base(remote['name'] + "/" + remote['branch'], head)[0] != head:
                     result = True
             except:
