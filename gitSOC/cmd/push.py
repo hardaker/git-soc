@@ -28,10 +28,12 @@ class Push(gitSOC.cmd.Cmd):
             result = "[up to date]"
 
         elif result == "clean" or result == "won't: dirty":
-            for remotedef in self.get_remotes():
+            for remotedef in repo.get_remotes():
+                self.verbose(remotedef)
                 try:
-                    remote = repo.remote(remotedef['remote'])
+                    remote = repo.remote(remotedef['name'])
                     if remote:
+                        print remote
                         x = remote.push()
                         self.verbose("  push result: " + str(x))
                         self.verbose("  old: " + str(x[0].old_commit))
