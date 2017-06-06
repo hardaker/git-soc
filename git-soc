@@ -4,6 +4,7 @@ import gitSOC
 import argparse
 import gitSOC.cmd.register
 import gitSOC.cmd.status
+import gitSOC.cmd.info
 import gitSOC.cmd.fetch
 import gitSOC.cmd.pull
 import gitSOC.cmd.push
@@ -26,6 +27,8 @@ if cmd == 'register':
     cmd = gitSOC.cmd.register.Register(soc, baseargs = baseargs)
 elif cmd == 'status':
     cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
+elif cmd == 'info':
+    cmd = gitSOC.cmd.info.Info(soc, baseargs = baseargs)
 elif cmd == 'pull':
     cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
 elif cmd == 'fetch':
