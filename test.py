@@ -10,6 +10,7 @@ import gitSOC.cmd.status
 import gitSOC.cmd.cmd
 import os
 import subprocess
+import pdb
 
 class gitSocTests(unittest.TestCase):
 
@@ -31,6 +32,7 @@ class gitSocTests(unittest.TestCase):
         os.chdir(popeddir)
 
     def setUp(self):
+
         print "setting up"
 
         self.pastdirs = []
@@ -38,14 +40,9 @@ class gitSocTests(unittest.TestCase):
         self.baseargs = self.soc.parse_global_args()
 
         if os.path.isdir("__test"):
+            print "nuking"
             self.remove_tests()
-        os.makedirs("__test/repo1")
-        os.makedirs("__test/repo2")
         os.makedirs("__test/base")
-        
-        tmpcmd = gitSOC.cmd.cmd.Cmd(self.soc, self.baseargs)
-        tmpcmd.run_cmd(["git", "init"], "__test/repo1")
-        tmpcmd.run_cmd(["git", "init"], "__test/repo2")
 
     def remove_tests(self):
         #print "cleaning up"
@@ -59,6 +56,22 @@ class gitSocTests(unittest.TestCase):
         args['me'].assertTrue(repo.path() != "")
         self.count = self.count + 1
 
+    def create_cloned_repo(self, reponame, cloned_to_name = None):
+        if not cloned_to_name:
+            cloned_to_name = reponame
+
+        cwd = os.getcwd() + "/"
+        os.makedirs("__test/upstreams/" + reponame)
+        
+        self.pushd(cwd + "__test/upstreams/" + reponame)
+        subprocess.call(["git", "init"])
+        self.popd()
+
+        self.pushd(cwd + "__test/")
+        subprocess.call(["git", "clone", "upstreams/" + reponame,
+                         cloned_to_name])
+        self.popd()
+        
     def test_register(self):
         cwd = os.getcwd() + "/"
         basedir = cwd + "__test/base"
@@ -69,12 +82,15 @@ class gitSocTests(unittest.TestCase):
         self.count = 0
         for repo in repos:
 
+            self.create_cloned_repo(repo)
+            args = reg.parse_args(['-B',basedir, repo])
+
             self.pushd(cwd + "__test/" + repo)
             args = reg.parse_args(['-B',basedir, repo])
-            self.popd()
-
             #print(args)
             reg.run(args)
+
+            self.popd()
 
             self.assertTrue(os.path.isdir("__test/base"))
             self.assertTrue(os.path.isfile("__test/base/" + repo + ".yml"))
