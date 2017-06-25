@@ -7,6 +7,7 @@ import gitSOC.cmd.register
 import gitSOC.cmd.pull
 import gitSOC.cmd.push
 import gitSOC.cmd.status
+import gitSOC.cmd.fetch
 import gitSOC.cmd.cmd
 import os
 import subprocess
@@ -21,6 +22,7 @@ class gitSocTests(unittest.TestCase):
     def __init__(self, casenames):
         print casenames
         self.inited = False
+        self.config_loaded = False
         unittest.TestCase.__init__(self, casenames)
 
     def pushd(self, newpath):
@@ -47,6 +49,9 @@ class gitSocTests(unittest.TestCase):
     def create_command(self, command):
         cmd = command(self.soc, self.baseargs)
         self.cmd_args = cmd.parse_args(['-B',self.basedir])
+        if not self.config_loaded:
+            self.config_loaded = True
+            self.soc.load_config_directory('__test/base', self.cmd_args)
         return cmd
 
     def create_command_and_run(self, command):
@@ -153,6 +158,7 @@ class gitSocTests(unittest.TestCase):
         self.assertEqual(self.count, 4)
 
     def test_20_push_then_pull(self):
+        print "#******** PUSH then PULL"
 
         push = self.create_command(gitSOC.cmd.push.Push)
         self.soc.load_config_directory('__test/base', self.cmd_args)
@@ -191,6 +197,28 @@ class gitSocTests(unittest.TestCase):
         self.run_status()
         self.assertTrue(os.path.isfile("__test/repo1/file_repo1clone"))
         self.assertTrue(os.path.isfile("__test/repo2/file_repo2clone"))
+
+    def test_30_fetch_only(self):
+        print "#******** FETCH"
+        # create some files
+        for repo in self.repos:
+            basename = repo[0]
+            clonename = repo[1]
+
+            self.create_file(clonename, "file_" + clonename,
+                             "my fetch change " + clonename, True)
+        
+        # push everything out
+        self.run_status()
+        self.create_command_and_run(gitSOC.cmd.push.Push)
+        self.run_status()
+
+        # fetch everything
+        self.create_command_and_run(gitSOC.cmd.fetch.Fetch)
+
+        self.run_status()
+        
+        
 
 
 if __name__ == '__main__':
