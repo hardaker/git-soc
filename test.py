@@ -12,7 +12,16 @@ import os
 import subprocess
 import pdb
 
+if os.path.isdir("__test"):
+    print "********* nuking"
+    subprocess.call(["rm","-rf","__test"])
+
 class gitSocTests(unittest.TestCase):
+
+    def __init__(self, casenames):
+        print casenames
+        self.inited = False
+        unittest.TestCase.__init__(self, casenames)
 
     def pushd(self, newpath):
         self.pastdirs.append(os.getcwd())
@@ -31,18 +40,25 @@ class gitSocTests(unittest.TestCase):
         #print "popping out to " + popeddir
         os.chdir(popeddir)
 
-    def setUp(self):
-
-        print "setting up"
-
-        self.pastdirs = []
+    def setup_soc(self):
         self.soc = gitSOC.GitSOC()
         self.baseargs = self.soc.parse_global_args()
 
-        if os.path.isdir("__test"):
-            print "nuking"
-            self.remove_tests()
-        os.makedirs("__test/base")
+    def setUp(self):
+        self.cwd = os.getcwd() + "/"
+
+        self.pastdirs = []
+        self.setup_soc()
+
+        # if os.path.isdir("__test"):
+        #     print "nuking"
+        #     self.remove_tests()
+        self.basedir = self.cwd + "__test/base"
+        if not os.path.isdir(self.basedir):
+            os.makedirs(self.basedir)
+
+        self.repos = [['repo1', 'repo1'], ['repo2', 'repo2'],
+                      ['repo1', 'repo1clone'], ['repo2', 'repo2clone']]
 
     def remove_tests(self):
         #print "cleaning up"
@@ -60,48 +76,102 @@ class gitSocTests(unittest.TestCase):
         if not cloned_to_name:
             cloned_to_name = reponame
 
-        cwd = os.getcwd() + "/"
         if not os.path.isdir("__test/upstreams/" + reponame):
             os.makedirs("__test/upstreams/" + reponame)
         
-            self.pushd(cwd + "__test/upstreams/" + reponame)
-            subprocess.call(["git", "init"])
+            self.pushd(self.cwd + "__test/upstreams/" + reponame)
+            subprocess.call(["git", "init", "--bare"])
             self.popd()
 
-        self.pushd(cwd + "__test/")
+        self.pushd(self.cwd + "__test/")
         subprocess.call(["git", "clone", "upstreams/" + reponame,
                          cloned_to_name])
         self.popd()
         
-    def test_register(self):
-        cwd = os.getcwd() + "/"
-        basedir = cwd + "__test/base"
+        # set up initial content for establishing a base history tree
+        if reponame == cloned_to_name:
+            self.pushd(self.cwd + "__test/" + cloned_to_name)
+            subprocess.call(["touch", "add", "_soc_test"])
+            subprocess.call(["git", "add", "_soc_test"])
+            subprocess.call(["git", "commit", "-m", "init", "_soc_test"])
+            self.popd()
+
+    def create_file(self, reponame, filename, content, commit = False):
+        self.pushd(self.cwd + "__test/" + reponame)
+        fileh = open(filename, "w")
+        fileh.write(content)
+        fileh.close()
+
+        if commit:
+            subprocess.call(["git", "add", filename])
+            subprocess.call(["git", "commit", "-m", "commiting " + filename])
+
+        self.popd()
+
+    def run_status(self):
+        status = gitSOC.cmd.status.Status(self.soc, self.baseargs)
+        args = status.parse_args(['-B',self.basedir])
+        status.run(args)
+
+    def test_10_register(self):
         reg = gitSOC.cmd.register.Register(self.soc, self.baseargs)
 
-        repos = [['repo1', 'repo1'], ['repo2', 'repo2'],
-                 ['repo1', 'repo1clone'], ['repo2', 'repo2clone']]
-
         self.count = 0
-        for repo in repos:
 
-            self.create_cloned_repo(repo[0], repo[1])
-            args = reg.parse_args(['-B',basedir, repo[1]])
+        for repo in self.repos:
+            basename = repo[0]
+            clonename = repo[1]
 
-            self.pushd(cwd + "__test/" + repo[1])
-            args = reg.parse_args(['-B',basedir, repo[1]])
+            self.create_cloned_repo(basename, clonename)
+            args = reg.parse_args(['-B',self.basedir, clonename])
+
+            self.pushd(self.cwd + "__test/" + clonename)
+            args = reg.parse_args(['-B',self.basedir, clonename])
             #print(args)
             reg.run(args)
 
             self.popd()
 
             self.assertTrue(os.path.isdir("__test/base"))
-            self.assertTrue(os.path.isfile("__test/base/" + repo[1] + ".yml"))
+            self.assertTrue(os.path.isfile("__test/base/" + clonename + ".yml"))
 
         self.soc.load_config_directory('__test/base', reg)
         
         self.soc.foreach_repo(self.is_repo_correct, { 'me': self })
 
         self.assertEqual(self.count, 4)
+
+    def test_20_push_then_pull(self):
+
+        # push everything out
+        push = gitSOC.cmd.push.Push(self.soc, self.baseargs)
+        args = push.parse_args(['-B',self.basedir])
+        self.soc.load_config_directory('__test/base', args)
+        for repo in self.repos:
+            basename = repo[0]
+            clonename = repo[1]
+
+            self.create_file(clonename, "file_" + clonename,
+                             "my content from " + clonename, True)
+
+        push.run(args)
+
+        self.run_status()
+
+        # pull everything into the directories
+        # push everything out
+        pull = gitSOC.cmd.pull.Pull(self.soc, self.baseargs)
+        args = pull.parse_args(['-B',self.basedir])
+        pull.run(args)
+
+        # check results, should be 1 failed push 
+        for repo in self.repos:
+            basename = repo[0]
+            clonename = repo[1]
+        
+        self.run_status()
+            
+
 
 if __name__ == '__main__':
     unittest.main()
