@@ -183,6 +183,13 @@ class gitSocTests(unittest.TestCase):
 
         self.run_status()
             
+        self.create_command_and_run(gitSOC.cmd.push.Push)
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
+
+        # the above falses should be fixed now
+        self.run_status()
+        self.assertTrue(os.path.isfile("__test/repo1/file_repo1clone"))
+        self.assertTrue(os.path.isfile("__test/repo2/file_repo2clone"))
 
 
 if __name__ == '__main__':
