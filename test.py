@@ -44,6 +44,17 @@ class gitSocTests(unittest.TestCase):
         self.soc = gitSOC.GitSOC()
         self.baseargs = self.soc.parse_global_args()
 
+    def create_command(self, command):
+        cmd = command(self.soc, self.baseargs)
+        self.cmd_args = cmd.parse_args(['-B',self.basedir])
+        return cmd
+
+    def create_command_and_run(self, command):
+        cmd = self.create_command(command)
+        print cmd
+        print command
+        cmd.run(self.cmd_args)
+
     def setUp(self):
         self.cwd = os.getcwd() + "/"
 
@@ -110,9 +121,7 @@ class gitSocTests(unittest.TestCase):
         self.popd()
 
     def run_status(self):
-        status = gitSOC.cmd.status.Status(self.soc, self.baseargs)
-        args = status.parse_args(['-B',self.basedir])
-        status.run(args)
+        self.create_command_and_run(gitSOC.cmd.status.Status)
 
     def test_10_register(self):
         reg = gitSOC.cmd.register.Register(self.soc, self.baseargs)
@@ -144,10 +153,10 @@ class gitSocTests(unittest.TestCase):
 
     def test_20_push_then_pull(self):
 
-        # push everything out
-        push = gitSOC.cmd.push.Push(self.soc, self.baseargs)
-        args = push.parse_args(['-B',self.basedir])
-        self.soc.load_config_directory('__test/base', args)
+        push = self.create_command(gitSOC.cmd.push.Push)
+        self.soc.load_config_directory('__test/base', self.cmd_args)
+
+        # create some files
         for repo in self.repos:
             basename = repo[0]
             clonename = repo[1]
@@ -155,15 +164,16 @@ class gitSocTests(unittest.TestCase):
             self.create_file(clonename, "file_" + clonename,
                              "my content from " + clonename, True)
 
-        push.run(args)
+            
+        # push everything out
+        push.run(self.cmd_args)
 
+        # check status
         self.run_status()
 
         # pull everything into the directories
         # push everything out
-        pull = gitSOC.cmd.pull.Pull(self.soc, self.baseargs)
-        args = pull.parse_args(['-B',self.basedir])
-        pull.run(args)
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
 
         # check results, should be 1 failed push 
         for repo in self.repos:
