@@ -205,7 +205,7 @@ class gitSocTests(unittest.TestCase):
             basename = repo[0]
             clonename = repo[1]
 
-            self.create_file(clonename, "file_" + clonename,
+            self.create_file(clonename, "fetch_" + clonename,
                              "my fetch change " + clonename, True)
         
         # push everything out
@@ -216,10 +216,35 @@ class gitSocTests(unittest.TestCase):
         # fetch everything
         self.create_command_and_run(gitSOC.cmd.fetch.Fetch)
 
+        # make sure everyting didn't create new files
+        self.assertFalse(os.path.isfile("__test/repo1/fetch_repo1clone"))
+        self.assertFalse(os.path.isfile("__test/repo1clone/fetch_repo1"))
+        self.assertFalse(os.path.isfile("__test/repo2/fetch_repo2clone"))
+        self.assertFalse(os.path.isfile("__test/repo2clone/fetch_repo2"))
+
+        self.run_status()
+
+        # pull/merge everything
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
         self.run_status()
         
-        
+        # make sure pull did create the new files
+        self.assertTrue(os.path.isfile("__test/repo1clone/fetch_repo1"))
+        self.assertTrue(os.path.isfile("__test/repo2clone/fetch_repo2"))
 
+        # these should still be missing
+        self.assertFalse(os.path.isfile("__test/repo11/fetch_repo1clone"))
+        self.assertFalse(os.path.isfile("__test/repo2/fetch_repo2clone"))
+
+        # pull/merge everything to clean up
+        self.create_command_and_run(gitSOC.cmd.push.Push)
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
+        self.run_status()
+        
+        # these should finally be present
+        self.assertTrue(os.path.isfile("__test/repo1/fetch_repo1clone"))
+        self.assertTrue(os.path.isfile("__test/repo2/fetch_repo2clone"))
+        self.run_status()
 
 if __name__ == '__main__':
     unittest.main()
