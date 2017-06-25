@@ -53,6 +53,7 @@ class gitSocTests(unittest.TestCase):
         cmd = self.create_command(command)
         print cmd
         print command
+        print "# running " + str(cmd)
         cmd.run(self.cmd_args)
 
     def setUp(self):
