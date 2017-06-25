@@ -61,11 +61,12 @@ class gitSocTests(unittest.TestCase):
             cloned_to_name = reponame
 
         cwd = os.getcwd() + "/"
-        os.makedirs("__test/upstreams/" + reponame)
+        if not os.path.isdir("__test/upstreams/" + reponame):
+            os.makedirs("__test/upstreams/" + reponame)
         
-        self.pushd(cwd + "__test/upstreams/" + reponame)
-        subprocess.call(["git", "init"])
-        self.popd()
+            self.pushd(cwd + "__test/upstreams/" + reponame)
+            subprocess.call(["git", "init"])
+            self.popd()
 
         self.pushd(cwd + "__test/")
         subprocess.call(["git", "clone", "upstreams/" + reponame,
@@ -77,29 +78,30 @@ class gitSocTests(unittest.TestCase):
         basedir = cwd + "__test/base"
         reg = gitSOC.cmd.register.Register(self.soc, self.baseargs)
 
-        repos = ['repo1', 'repo2']
+        repos = [['repo1', 'repo1'], ['repo2', 'repo2'],
+                 ['repo1', 'repo1clone'], ['repo2', 'repo2clone']]
 
         self.count = 0
         for repo in repos:
 
-            self.create_cloned_repo(repo)
-            args = reg.parse_args(['-B',basedir, repo])
+            self.create_cloned_repo(repo[0], repo[1])
+            args = reg.parse_args(['-B',basedir, repo[1]])
 
-            self.pushd(cwd + "__test/" + repo)
-            args = reg.parse_args(['-B',basedir, repo])
+            self.pushd(cwd + "__test/" + repo[1])
+            args = reg.parse_args(['-B',basedir, repo[1]])
             #print(args)
             reg.run(args)
 
             self.popd()
 
             self.assertTrue(os.path.isdir("__test/base"))
-            self.assertTrue(os.path.isfile("__test/base/" + repo + ".yml"))
+            self.assertTrue(os.path.isfile("__test/base/" + repo[1] + ".yml"))
 
         self.soc.load_config_directory('__test/base', reg)
         
         self.soc.foreach_repo(self.is_repo_correct, { 'me': self })
 
-        self.assertEqual(self.count, 2)
+        self.assertEqual(self.count, 4)
 
 if __name__ == '__main__':
     unittest.main()
