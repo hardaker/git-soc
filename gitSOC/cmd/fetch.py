@@ -23,9 +23,9 @@ class Fetch(gitSOC.cmd.Cmd):
             remote = repo.remote()
             self.verbose("fetching " + repo.path() + ":")
             if remote:
-                oldcommit = remote.commit()
+                oldcommit = remote.repo.commit()
                 x = remote.fetch()
-                newcommit = remote.commit()
+                newcommit = remote.repo.commit()
                 self.verbose("  fetch result: " + str(x))
                 self.verbose("  old: " + str(x[0].old_commit))
                 self.verbose("  new: " + str(x[0].commit))
