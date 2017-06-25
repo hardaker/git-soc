@@ -175,11 +175,12 @@ class gitSocTests(unittest.TestCase):
         # push everything out
         self.create_command_and_run(gitSOC.cmd.pull.Pull)
 
-        # check results, should be 1 failed push 
-        for repo in self.repos:
-            basename = repo[0]
-            clonename = repo[1]
-        
+        # check results, should be 2 failed pushes because of conflict
+        self.assertTrue(os.path.isfile("__test/repo1clone/file_repo1"))
+        self.assertTrue(os.path.isfile("__test/repo2clone/file_repo2"))
+        self.assertFalse(os.path.isfile("__test/repo1/file_repo2clone"))
+        self.assertFalse(os.path.isfile("__test/repo2/file_repo1clone"))
+
         self.run_status()
             
 
