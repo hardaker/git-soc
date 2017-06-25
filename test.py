@@ -91,9 +91,10 @@ class gitSocTests(unittest.TestCase):
         # set up initial content for establishing a base history tree
         if reponame == cloned_to_name:
             self.pushd(self.cwd + "__test/" + cloned_to_name)
-            subprocess.call(["touch", "add", "_soc_test"])
+            subprocess.call(["touch", "_soc_test"])
             subprocess.call(["git", "add", "_soc_test"])
             subprocess.call(["git", "commit", "-m", "init", "_soc_test"])
+            subprocess.call(["git", "push"])
             self.popd()
 
     def create_file(self, reponame, filename, content, commit = False):
@@ -122,12 +123,12 @@ class gitSocTests(unittest.TestCase):
             basename = repo[0]
             clonename = repo[1]
 
+            print "*** " + basename + " => " + clonename
             self.create_cloned_repo(basename, clonename)
-            args = reg.parse_args(['-B',self.basedir, clonename])
 
             self.pushd(self.cwd + "__test/" + clonename)
-            args = reg.parse_args(['-B',self.basedir, clonename])
             #print(args)
+            args = reg.parse_args(['-B',self.basedir, clonename])
             reg.run(args)
 
             self.popd()
