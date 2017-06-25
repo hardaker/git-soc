@@ -112,7 +112,6 @@ class ManagedRepo(git.Repo):
         # create a sym link
         save_name = self.get_config('name')
         if not os.path.islink(linkname) and save_name != None:
-            print "here" + save_name
             if save_name[:3] == "../":
                 # relative link add in another ../
                 save_name = "../" + save_name
