@@ -96,13 +96,14 @@ class ManagedRepo(git.Repo):
         for remote in self.get_remotes():
             try:
                 head = self.commit()
-                origin = self.commit(remote['name'] + "/" + remote['branch'], head)
+                origin = self.commit(remote['name'] + "/" + remote['branch'])
 
                 if head != origin:
                     # if we're the merge base then we're behind
                     if self.merge_base(origin, head)[0] == head:
                         return True
             except:
+                print "ERROR: needs_merge failed"
                 return True
         
         return False
