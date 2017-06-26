@@ -25,6 +25,11 @@ class gitSocTests(unittest.TestCase):
         self.config_loaded = False
         unittest.TestCase.__init__(self, casenames)
 
+    def banner(self, testname):
+        print "#"
+        print "# " + testname + "########################################"
+        print "#"
+
     def pushd(self, newpath):
         self.pastdirs.append(os.getcwd())
 
@@ -126,10 +131,22 @@ class gitSocTests(unittest.TestCase):
 
         self.popd()
 
+    def verify_file_contents(self, reponame, filename, content):
+        self.pushd(self.cwd + "__test/" + reponame)
+        fileh = open(filename, "r")
+        result = fileh.read(4096)
+        fileh.close()
+        self.popd()
+
+        if result != content:
+            return False
+        return True
+
     def run_status(self):
         self.create_command_and_run(gitSOC.cmd.status.Status)
 
     def test_10_register(self):
+        self.banner("REGISTER")
         reg = gitSOC.cmd.register.Register(self.soc, self.baseargs)
 
         self.count = 0
@@ -158,7 +175,7 @@ class gitSocTests(unittest.TestCase):
         self.assertEqual(self.count, 4)
 
     def test_20_push_then_pull(self):
-        print "#******** PUSH then PULL"
+        self.banner("PUSH then PULL")
 
         push = self.create_command(gitSOC.cmd.push.Push)
         self.soc.load_config_directory('__test/base', self.cmd_args)
@@ -199,7 +216,7 @@ class gitSocTests(unittest.TestCase):
         self.assertTrue(os.path.isfile("__test/repo2/file_repo2clone"))
 
     def test_30_fetch_only(self):
-        print "#******** FETCH"
+        self.banner("FETCH")
         # create some files
         for repo in self.repos:
             basename = repo[0]
@@ -245,6 +262,21 @@ class gitSocTests(unittest.TestCase):
         self.assertTrue(os.path.isfile("__test/repo1/fetch_repo1clone"))
         self.assertTrue(os.path.isfile("__test/repo2/fetch_repo2clone"))
         self.run_status()
+
+    def test_40_pull_with_different_file_conflict(self):
+        self.banner("UNRELATED CONFLICT")
+        self.create_file(self.repos[0][1], "unrelated_",
+                         "my unrelated local change ", True)
+        self.create_file(self.repos[2][1], "otherfile_",
+                         "my local change ", False)
+        self.create_command_and_run(gitSOC.cmd.push.Push)
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
+        self.run_status()
+
+        self.assertTrue(self.verify_file_contents(self.repos[2][1],
+                                                  "unrelated_",
+                                                  "my unrelated local change "))
+        
 
 if __name__ == '__main__':
     unittest.main()
