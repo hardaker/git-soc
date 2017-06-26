@@ -102,6 +102,9 @@ class ManagedRepo(git.Repo):
                     # if we're the merge base then we're behind
                     if self.merge_base(origin, head)[0] == head:
                         return True
+                    # if neither is, then we're diverged and need merge
+                    elif self.merge_base(origin, head)[0] != origin:
+                        return True
             except:
                 print "ERROR: needs_merge failed"
                 return True
