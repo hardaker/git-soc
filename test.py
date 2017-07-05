@@ -30,6 +30,9 @@ class gitSocTests(unittest.TestCase):
         print "# " + testname + "########################################"
         print "#"
 
+    def running(self, what):
+        print "# Running: " + what
+
     def pushd(self, newpath):
         self.pastdirs.append(os.getcwd())
 
@@ -145,6 +148,16 @@ class gitSocTests(unittest.TestCase):
     def run_status(self):
         self.create_command_and_run(gitSOC.cmd.status.Status)
 
+    def sync_everything(self):
+        """Cheap hack to push and pull a bunch to make everything
+           get in sync"""
+        self.running("Sync")
+        self.create_command_and_run(gitSOC.cmd.push.Push)
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
+        self.create_command_and_run(gitSOC.cmd.push.Push)
+        self.create_command_and_run(gitSOC.cmd.pull.Pull)
+        self.run_status()
+
     def test_10_register(self):
         self.banner("REGISTER")
         reg = gitSOC.cmd.register.Register(self.soc, self.baseargs)
@@ -207,8 +220,7 @@ class gitSocTests(unittest.TestCase):
 
         self.run_status()
             
-        self.create_command_and_run(gitSOC.cmd.push.Push)
-        self.create_command_and_run(gitSOC.cmd.pull.Pull)
+        self.sync_everything()
 
         # the above falses should be fixed now
         self.run_status()
@@ -254,9 +266,7 @@ class gitSocTests(unittest.TestCase):
         self.assertFalse(os.path.isfile("__test/repo2/fetch_repo2clone"))
 
         # pull/merge everything to clean up
-        self.create_command_and_run(gitSOC.cmd.push.Push)
-        self.create_command_and_run(gitSOC.cmd.pull.Pull)
-        self.run_status()
+        self.sync_everything()
         
         # these should finally be present
         self.assertTrue(os.path.isfile("__test/repo1/fetch_repo1clone"))
@@ -276,6 +286,12 @@ class gitSocTests(unittest.TestCase):
         self.assertTrue(self.verify_file_contents(self.repos[2][1],
                                                   "unrelated_",
                                                   "my unrelated local change "))
+        self.pushd(self.cwd + "__test/" + self.repos[2][1])
+        subprocess.call(["git", "add", "otherfile_"])
+        subprocess.call(["git", "commit", "-m", "otherfile_"])
+
+        # pull/merge everything to clean up
+        self.sync_everything()
         
 
 if __name__ == '__main__':
