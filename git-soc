@@ -43,7 +43,7 @@ elif cmd == 'command' or cmd == "cmd":
 elif cmd == 'diff':
     cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
     args = ["git diff"]
-elif cmd == 'interactive':
+elif cmd == 'interactive' or cmd == "i":
     cmd = gitSOC.cmd.interactive.Interactive(soc, baseargs = baseargs)
 elif cmd == 'git':
     cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
@@ -51,7 +51,7 @@ elif cmd == 'git':
 elif cmd == "-h" or cmd == "--help" or cmd == "help":
     print("Usage: " + sys.argv[0] + " COMMAND [-B basedir] <COMMAND ARGS>")
     print("Commands available:")
-    print("    " + "\n    ".join(["register","info","status","pull","push","pushpull","command"]))
+    print("    " + "\n    ".join(["register","info","status","interactive","pull","push","pushpull","command"]))
     print("\nSee the --help output of each command for further details")
     exit(0)
 else:
