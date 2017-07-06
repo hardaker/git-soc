@@ -63,7 +63,7 @@ class Register(gitSOC.cmd.Cmd):
         for remote in remotes:
             if remote.name == args.remote:
                 urls = remote.urls
-                url = urls.next()
+                url = next(urls)
                 repodata['url'] = str(url)
 
         if 'url' not in repodata:
