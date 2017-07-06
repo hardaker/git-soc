@@ -9,6 +9,13 @@ work?  What can do I when switching between them?
 
 `git soc` is going to be the answer.
 
+## Pre-reqs
+
+For linux:
+
+    - python3-GitPython
+    - python3-PyYAML
+
 ## Usage available today:
 
     # cd ~/src/
