@@ -33,7 +33,21 @@ class Interactive(gitSOC.cmd.Cmd):
         self.gitstatus = gitSOC.cmd.cmd.Cmd(soc, baseargs)
         self.gitstatus_args = self.shell.parse_args(["git status"])
 
+    def parse_args(self, args):
+        p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
+                                    prog="git-soc cmd",
+                                    description="Interactively asks for what to do in each repo",
+                                    epilog="Example: git soc interactive")
+        p.add_argument("--dirty", "-d", action="store_true",
+                       help="Only stop into the dirty repos")
+        parsed_args = p.parse_args(args = args)
+        self.register_parsed_args(parsed_args)
+        return parsed_args
+
     def interactive(self, repo, args = None):
+        if args.dirty and not repo.is_dirty():
+            return
+        
         print("----")
         self.status.print_repo_status(repo, args)
 
