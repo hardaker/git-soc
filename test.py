@@ -14,40 +14,40 @@ import subprocess
 import pdb
 
 if os.path.isdir("__test"):
-    print "********* nuking"
+    print("********* nuking")
     subprocess.call(["rm","-rf","__test"])
 
 class gitSocTests(unittest.TestCase):
 
     def __init__(self, casenames):
-        print casenames
+        print(casenames)
         self.inited = False
         self.config_loaded = False
         unittest.TestCase.__init__(self, casenames)
 
     def banner(self, testname):
-        print "#"
-        print "# " + testname + "########################################"
-        print "#"
+        print("#")
+        print("# " + testname + "########################################")
+        print("#")
 
     def running(self, what):
-        print "# Running: " + what
+        print("# Running: " + what)
 
     def pushd(self, newpath):
         self.pastdirs.append(os.getcwd())
 
-        #print "jumping into " + newpath
+        #print("jumping into " + newpath)
         os.chdir(newpath)
 
     def popd(self):
         if len(self.pastdirs) < 1:
-            print "no more  dirs to pop"
+            print("no more  dirs to pop")
             exit(1)
 
         popeddir = self.pastdirs[-1]
         self.pastdirs = self.pastdirs[:-1]
 
-        #print "popping out to " + popeddir
+        #print("popping out to " + popeddir)
         os.chdir(popeddir)
 
     def setup_soc(self):
@@ -64,9 +64,9 @@ class gitSocTests(unittest.TestCase):
 
     def create_command_and_run(self, command):
         cmd = self.create_command(command)
-        print cmd
-        print command
-        print "# running " + str(cmd)
+        print(cmd)
+        print(command)
+        print("# running " + str(cmd))
         cmd.run(self.cmd_args)
 
     def setUp(self):
@@ -76,7 +76,7 @@ class gitSocTests(unittest.TestCase):
         self.setup_soc()
 
         # if os.path.isdir("__test"):
-        #     print "nuking"
+        #     print("nuking")
         #     self.remove_tests()
         self.basedir = self.cwd + "__test/base"
         if not os.path.isdir(self.basedir):
@@ -86,14 +86,14 @@ class gitSocTests(unittest.TestCase):
                       ['repo1', 'repo1clone'], ['repo2', 'repo2clone']]
 
     def remove_tests(self):
-        #print "cleaning up"
+        #print("cleaning up")
         subprocess.call(["rm","-rf","__test"])
 
     #def tearDown(self):
         #self.remove_tests()
 
     def is_repo_correct(self, repo, args):
-        #print "testing repo " + repo.path()
+        #print("testing repo " + repo.path())
         args['me'].assertTrue(repo.path() != "")
         self.count = self.count + 1
 
@@ -168,7 +168,7 @@ class gitSocTests(unittest.TestCase):
             basename = repo[0]
             clonename = repo[1]
 
-            print "*** " + basename + " => " + clonename
+            print("*** " + basename + " => " + clonename)
             self.create_cloned_repo(basename, clonename)
 
             self.pushd(self.cwd + "__test/" + clonename)

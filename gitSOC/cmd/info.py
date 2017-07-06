@@ -22,14 +22,14 @@ class Info(gitSOC.cmd.Cmd):
         file = open(linkname, "r")
         # XXX: look upward too
         if not file:
-            print "Can not find registration information in .git/git-soc.yml"
+            print("Can not find registration information in .git/git-soc.yml")
             exit(1)
             # XXX: search for it instead in the full set
 
         out = yaml.load(file)
         # should be prettier than this:
         if not out:
-            print "could not parse the registration information from .git/git-soc.yml"
+            print("could not parse the registration information from .git/git-soc.yml")
             exit(1)
 
         file = open(linkname, "r")

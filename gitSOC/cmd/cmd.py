@@ -26,13 +26,13 @@ class Cmd(gitSOC.cmd.Cmd):
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         if 'command' not in parsed_args:
-            print "a command to run must be passed"
+            print("a command to run must be passed")
             exit(1)
         return parsed_args
 
     def cmd(self, repo, args):
         if args.seperator or args.ask:
-            print "--- " + repo.path()
+            print("--- " + repo.path())
 
         # interactive 'ask' mode
         if args.ask:

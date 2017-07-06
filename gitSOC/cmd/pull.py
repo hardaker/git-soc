@@ -61,7 +61,7 @@ class Pull(gitSOC.cmd.Cmd):
                         else:
                             result = "[up to date]"
                     except Exception as e:
-                        print e
+                        print(e)
                         result = "failed"
                     except:
                         result = "failed"

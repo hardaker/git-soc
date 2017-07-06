@@ -37,7 +37,7 @@ class Fetch(gitSOC.cmd.Cmd):
                 else:
                     result = "no remote - weird bug"
             except Exception as e:
-                print e
+                print(e)
                 result = "failed"
             except:
                 result = "fail - crashed"

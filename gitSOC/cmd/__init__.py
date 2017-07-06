@@ -92,7 +92,7 @@ class Cmd(object):
         prompt = baseprompt + prompt[1:] + ": "
 
         while selected not in table:
-            selected = raw_input(prompt)
+            selected = input(prompt)
             if selected == '' and default:
                 selected = default
         return selected

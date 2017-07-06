@@ -33,7 +33,7 @@ class Push(gitSOC.cmd.Cmd):
                 try:
                     remote = repo.remote(remotedef['name'])
                     if remote:
-                        print remote
+                        print(remote)
                         x = remote.push()
                         self.verbose("  push result: " + str(x))
                         self.verbose("  old: " + str(x[0].old_commit))
@@ -43,7 +43,7 @@ class Push(gitSOC.cmd.Cmd):
                     else:
                         result = "no remote - weird bug"
                 except Exception as e:
-                    print e
+                    print(e)
                     result = "failed"
                 except:
                     result = "won't: failed"

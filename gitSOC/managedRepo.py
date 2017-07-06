@@ -79,8 +79,8 @@ class ManagedRepo(git.Repo):
                 head = self.commit()
                 merge_base = self.merge_base(remote['name'] + "/" + remote['branch'], head)[0]
                 if verbose:
-                    print " cur head:   " + head
-                    print " merge_base: " + merge_base
+                    print(" cur head:   " + head)
+                    print(" merge_base: " + merge_base)
 
                 if merge_base != head:
                     result = True
@@ -106,7 +106,7 @@ class ManagedRepo(git.Repo):
                     elif self.merge_base(origin, head)[0] != origin:
                         return True
             except:
-                print "ERROR: needs_merge failed"
+                print("ERROR: needs_merge failed")
                 return True
         
         return False
@@ -126,7 +126,7 @@ class ManagedRepo(git.Repo):
         if not self.is_initialized():
             return False
 
-        print self
+        print(self)
         repodir = self.get_config('dir')
         name = self.get_config('name')
         linkname = repodir + "/.git/git-soc.yml"
@@ -159,4 +159,4 @@ class ManagedRepo(git.Repo):
 if __name__ == "__main__":
     mr = ManagedRepo(".")
     print(mr)
-    print "dirty: " + str(mr.is_dirty())
+    print("dirty: " + str(mr.is_dirty()))

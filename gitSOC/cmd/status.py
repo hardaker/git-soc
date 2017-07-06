@@ -67,11 +67,11 @@ class Status(gitSOC.cmd.Cmd):
                 if remote:
                     print("  %-10s: %s" % ("remote:", remote.name))
             except Exception as e:
-                print e
+                print(e)
             except:
                 pass
 
-            print "  remotes:"
+            print("  remotes:")
             for remote in repo.remotes:
                 print("    %-10s" % (remote.name))
                 

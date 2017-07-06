@@ -70,7 +70,7 @@ class Interactive(gitSOC.cmd.Cmd):
             elif answer == '!':
                 self.shell.cmd(repo, self.shell_args)
             else:
-                print "unknown option: '" + answer + "'"
+                print("unknown option: '" + answer + "'")
 
     def run(self, args):
         self.soc.foreach_repo(self.interactive, args)

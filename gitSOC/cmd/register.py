@@ -28,7 +28,7 @@ class Register(gitSOC.cmd.Cmd):
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         if 'name' not in parsed_args:
-            print "a file name to save it in must be passed"
+            print("a file name to save it in must be passed")
             exit(1)
         return parsed_args
 

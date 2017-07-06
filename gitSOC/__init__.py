@@ -1,4 +1,4 @@
-import managedRepo
+import gitSOC.managedRepo
 import yaml
 import os
 import re
@@ -14,7 +14,7 @@ class GitSOC(object):
         sortedrepos = sorted(self.repos, key=lambda k: k.path())
         for repo in sortedrepos:
             if 'verbose' in otherargs and otherargs.verbose:
-                print "------- " + repo.path()
+                print("------- " + repo.path())
             operator(repo, otherargs)
         
 
@@ -47,11 +47,12 @@ class GitSOC(object):
 
 if __name__ == "__main__":
     mrs = GitSOC(["."])
-    print mrs
+    print(mrs)
     #mrs.print_dirty_status()
 
     baseargs = mrs.parse_global_args()
     mrs.load_config_directory(baseargs['base'])
     #mrs.print_dirty_status()    
 
-    print "got: " + mrs.pick_one("pick one", ["apple", "bananna", "Camel"])
+    print("got: " + mrs.pick_one("pick one", ["apple", "bananna", "Camel"]))
+    
