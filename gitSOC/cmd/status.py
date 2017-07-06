@@ -49,12 +49,12 @@ class Status(gitSOC.cmd.Cmd):
             merge = "<"
             report = True
 
-        if args.untracked:
+        if 'untracked' in args and args.untracked:
             if repo.untracked_files:
                 untracked = "u"
                 report = True
 
-        if args.only_dirty and not report:
+        if 'only_dirty' in args and args.only_dirty and not report:
             return
 
         print("%-60s %s%s%s%s%s" % (repo.path(), dirty, index, merge, push, untracked))
