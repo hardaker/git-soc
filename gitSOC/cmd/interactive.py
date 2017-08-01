@@ -40,19 +40,36 @@ class Interactive(gitSOC.cmd.Cmd):
                                     epilog="Example: git soc interactive")
         p.add_argument("--dirty", "-d", action="store_true",
                        help="Only stop into the dirty repos")
+        p.add_argument("--push-pull", "--pp", "-p", action="store_true",
+                       help="Do a push/pull for each item too")
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         return parsed_args
 
-    def interactive(self, repo, args = None):
-        if args.dirty and not repo.is_dirty():
-            return
-        
+    def print_header(self, repo, args):
         print("----")
         self.status.print_repo_status(repo, args)
 
+    def interactive(self, repo, args = None):
+
+        # if push-pull, then always print the header
+        if args.push_pull:
+            self.print_header(repo, args)
+
+        if not repo.is_dirty():
+            if args.push_pull:
+                self.push.push(repo,args)
+                self.pull.pull(repo,args)
+            if args.dirty: # we were told to skip non-dirty things
+                return
+
+        # we only print the header now if push-pull didn't print it above
+        if not args.push_pull:
+            self.print_header(repo, args)
+
+        # iteratively ask what they want to do
         while True:
-            answer = self.pick_one("Cmd: ", ['status','diff','next','p-push','l-pull', 'quit', '!shell', 'git status'], default='n')
+            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'shell', 'git status'], default='n')
             if answer == 'n':
                 return
             elif answer == 's':
@@ -71,6 +88,10 @@ class Interactive(gitSOC.cmd.Cmd):
                 self.shell.cmd(repo, self.shell_args)
             else:
                 print("unknown option: '" + answer + "'")
+
+        if args.push_pull:
+            self.push.push(repo,args)
+            self.pull.pull(repo,args)
 
     def run(self, args):
         self.soc.foreach_repo(self.interactive, args)
