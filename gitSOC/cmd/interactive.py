@@ -12,6 +12,8 @@ import gitSOC.cmd.fetch
 import gitSOC.cmd.pull
 import gitSOC.cmd.push
 
+import readline
+
 class Interactive(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
@@ -32,6 +34,8 @@ class Interactive(gitSOC.cmd.Cmd):
 
         self.gitstatus = gitSOC.cmd.cmd.Cmd(soc, baseargs)
         self.gitstatus_args = self.shell.parse_args(["git status"])
+
+        readline.set_history_length(1000)
 
     def parse_args(self, args):
         p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
