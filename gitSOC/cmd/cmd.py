@@ -42,7 +42,7 @@ class Cmd(gitSOC.cmd.Cmd):
             elif result == 'q':
                 exit(0)
                 
-        self.run_cmd(args.command.split(), repo.path())
+        self.run_cmd(args.command, repo.path())
 
     def run(self, args):
         self.verbose("running command: " + args.command)

@@ -69,8 +69,8 @@ class Cmd(object):
         cwd = os.getcwd()
         if path:
             os.chdir(path)
-        self.verbose("running '" + " ".join(command) + "' in " + str(path))
-        subprocess.call(command)
+        self.verbose("running '" + command + "' in " + str(path))
+        os.system(command)
         if path:
             os.chdir(cwd)
 
