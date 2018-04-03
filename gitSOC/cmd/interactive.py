@@ -88,7 +88,6 @@ class Interactive(gitSOC.cmd.Cmd):
             elif answer[0] == "S":
                 self.shell.cmd(repo, self.shell_args)
             elif answer[0] == '!':
-                print(answer[1:].lstrip().split(" "))
                 result = self.shell.run_cmd(answer[1:].lstrip(), repo.path())
                 print(result[1])
             else:
