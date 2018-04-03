@@ -63,13 +63,9 @@ class Interactive(gitSOC.cmd.Cmd):
             if args.dirty: # we were told to skip non-dirty things
                 return
 
-        # we only print the header now if push-pull didn't print it above
-        if not args.push_pull:
-            self.print_header(repo, args)
-
         # iteratively ask what they want to do
         while True:
-            print("")
+            self.print_header(repo, args)
             answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','! cmd'], default='n')
             if answer[0] == 'n':
                 return
