@@ -70,9 +70,10 @@ class Cmd(object):
         if path:
             os.chdir(path)
         self.verbose("running '" + command + "' in " + str(path))
-        os.system(command)
+        result = subprocess.getstatusoutput(command)
         if path:
             os.chdir(cwd)
+        return result
 
     def pick_one(self, baseprompt, options, default = None):
         prompt = ""
