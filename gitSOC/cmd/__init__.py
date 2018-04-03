@@ -69,7 +69,7 @@ class Cmd(object):
         cwd = os.getcwd()
         if path:
             os.chdir(path)
-        self.verbose("running '" + " ".join(command) + "' in " + path)
+        self.verbose("running '" + " ".join(command) + "' in " + str(path))
         subprocess.call(command)
         if path:
             os.chdir(cwd)
@@ -77,7 +77,7 @@ class Cmd(object):
     def pick_one(self, baseprompt, options, default = None):
         prompt = ""
         table = {}
-        selected = None
+        selected = "_none"
 
         for option in options:
             first = option[0]
@@ -91,7 +91,7 @@ class Cmd(object):
         # drop the leading comma and add the prefix
         prompt = baseprompt + prompt[1:] + ": "
 
-        while selected not in table:
+        while selected[0] not in table:
             selected = input(prompt)
             if selected == '' and default:
                 selected = default

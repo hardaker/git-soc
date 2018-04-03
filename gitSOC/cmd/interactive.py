@@ -69,23 +69,27 @@ class Interactive(gitSOC.cmd.Cmd):
 
         # iteratively ask what they want to do
         while True:
-            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'shell', 'git status'], default='n')
-            if answer == 'n':
+            print("")
+            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','! cmd'], default='n')
+            if answer[0] == 'n':
                 return
-            elif answer == 's':
+            elif answer[0] == 's':
                 self.status.print_repo_status(repo, args)
-            elif answer == 'p':
+            elif answer[0] == 'p':
                 self.push.push(repo, args)
-            elif answer == 'l':
+            elif answer[0] == 'l':
                 self.pull.pull(repo, args)
-            elif answer == 'd':
+            elif answer[0] == 'd':
                 self.diff.cmd(repo, self.diff_args)
-            elif answer == 'g':
+            elif answer[0] == 'g':
                 self.gitstatus.cmd(repo, self.gitstatus_args)
-            elif answer == 'q':
+            elif answer[0] == 'q':
                 exit(0)
-            elif answer == '!':
+            elif answer[0] == "S":
                 self.shell.cmd(repo, self.shell_args)
+            elif answer[0] == '!':
+                print(answer[1:].lstrip().split(" "))
+                self.shell.run_cmd(answer[1:].lstrip().split(" "), repo.path())
             else:
                 print("unknown option: '" + answer + "'")
 
