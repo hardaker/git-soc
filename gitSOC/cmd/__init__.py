@@ -70,7 +70,7 @@ class Cmd(object):
         if path:
             os.chdir(path)
         self.verbose("running '" + command + "' in " + str(path))
-        result = subprocess.getstatusoutput(command)
+        result = os.system(command)
         if path:
             os.chdir(cwd)
         return result
