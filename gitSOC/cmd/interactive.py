@@ -89,7 +89,7 @@ class Interactive(gitSOC.cmd.Cmd):
                 self.shell.cmd(repo, self.shell_args)
             elif answer[0] == '!':
                 result = self.shell.run_cmd(answer[1:].lstrip(), repo.path())
-                print(result[1])
+                print(result)
             else:
                 print("unknown option: '" + answer + "'")
 
