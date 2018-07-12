@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import yaml
 import git
 import os
 
@@ -12,6 +13,24 @@ class ManagedRepo(git.Repo):
         self._config = repoconfig
         
         self.init_repo()
+
+    def save(self, name = None, config = None):
+
+        if not config:
+            config = self._config
+        if not name:
+            name = config['name']
+            
+        # create the directory structure if needed
+        if not os.path.isdir(os.path.dirname(name)):
+            os.makedirs(os.path.dirname(name))
+            
+        # convert the current repo info into yaml
+        output = { 'gitrepos': [config]}
+
+        file = open(name, "w")
+        out = yaml.safe_dump(output,default_flow_style=False)
+        file.write(out)
 
     def init_repo(self):
         """
@@ -54,7 +73,8 @@ class ManagedRepo(git.Repo):
             return self._config[name]
         return default
 
-    def set_config(self, name):
+    def set_config(self, name, value):
+        self._config[name] = value
         # XXX: set now and save? just set and move save to different function?
         pass
 

@@ -71,14 +71,8 @@ class Register(gitSOC.cmd.Cmd):
                   args.remote + "'")
             exit(1)
 
-        # create the directory structure if needed
-        if not os.path.isdir(os.path.dirname(args.name)):
-            os.makedirs(os.path.dirname(args.name))
-            
         # save the yaml
-        file = open(args.name, "w")
-        out = yaml.safe_dump(output,default_flow_style=False)
-        file.write(out)
+        repo.save()
 
         # create a sym link
         repo.create_symlink()
