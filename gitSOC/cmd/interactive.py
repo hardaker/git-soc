@@ -70,7 +70,7 @@ class Interactive(gitSOC.cmd.Cmd):
         # iteratively ask what they want to do
         while True:
             self.print_header(repo, args)
-            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','! cmd'], default='n')
+            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','commit-all','! cmd'], default='n')
             if answer[0] == 'n':
                 return
             elif answer[0] == 's':
@@ -83,6 +83,9 @@ class Interactive(gitSOC.cmd.Cmd):
                 self.diff.cmd(repo, self.diff_args)
             elif answer[0] == 'g':
                 self.gitstatus.cmd(repo, self.gitstatus_args)
+            elif answer[0] == 'c':
+                message = input("commit message: ")
+                self.shell.run_cmd("git commit -a -m '" + message + "'")
             elif answer[0] == 'q':
                 exit(0)
             elif answer[0] == "S":
