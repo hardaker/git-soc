@@ -35,6 +35,8 @@ class Interactive(gitSOC.cmd.Cmd):
         self.gitstatus = gitSOC.cmd.cmd.Cmd(soc, baseargs)
         self.gitstatus_args = self.shell.parse_args(["git status"])
 
+        self.commit = gitSOC.cmd.cmd.Cmd(soc, baseargs)
+
         readline.set_history_length(1000)
 
     def parse_args(self, args):
@@ -60,12 +62,13 @@ class Interactive(gitSOC.cmd.Cmd):
         if args.push_pull:
             self.print_header(repo, args)
 
-        if not repo.is_dirty():
-            if args.push_pull:
-                self.push.push(repo,args)
-                self.pull.pull(repo,args)
-            if args.dirty: # we were told to skip non-dirty things
-                return
+        if args.push_pull:
+            self.push.push(repo,args)
+            self.pull.pull(repo,args)
+
+        # we were told to skip non-dirty things
+        if args.dirty and not repo.is_dirty():
+            return
 
         # iteratively ask what they want to do
         while True:
@@ -85,7 +88,8 @@ class Interactive(gitSOC.cmd.Cmd):
                 self.gitstatus.cmd(repo, self.gitstatus_args)
             elif answer[0] == 'c':
                 message = input("commit message: ")
-                self.shell.run_cmd("git commit -a -m '" + message + "'")
+                self.commit_args = self.shell.parse_args(["git commit -a -m '" + message + "'"])
+                self.commit.cmd(repo, self.commit_args)
             elif answer[0] == 'q':
                 exit(0)
             elif answer[0] == "S":
