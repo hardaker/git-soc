@@ -75,6 +75,11 @@ class Interactive(gitSOC.cmd.Cmd):
             self.print_header(repo, args)
             answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','commit-all','! cmd'], default='n')
             if answer[0] == 'n':
+
+                if args.push_pull:
+                    self.push.push(repo,args)
+                    self.pull.pull(repo,args)
+
                 return
             elif answer[0] == 's':
                 self.status.print_repo_status(repo, args)
@@ -99,10 +104,6 @@ class Interactive(gitSOC.cmd.Cmd):
                 print(result)
             else:
                 print("unknown option: '" + answer + "'")
-
-        if args.push_pull:
-            self.push.push(repo,args)
-            self.pull.pull(repo,args)
 
     def run(self, args):
         self.soc.foreach_repo(self.interactive, args)
