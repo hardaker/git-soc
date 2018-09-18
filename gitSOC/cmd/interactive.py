@@ -42,7 +42,7 @@ class Interactive(gitSOC.cmd.Cmd):
     def parse_args(self, args):
         p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
                                     prog="git-soc cmd",
-                                    description="Interactively asks for what to do in each repo",
+                                    description="Interactively asks for what to do in each repo.  With -d, it'll pause only on dirty repos.  With --pp it'll try to pull and push both before and after prompting.",
                                     epilog="Example: git soc interactive")
         p.add_argument("--dirty", "-d", action="store_true",
                        help="Only stop into the dirty repos")
