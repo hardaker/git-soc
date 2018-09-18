@@ -102,4 +102,4 @@ class Cmd(object):
     def maybe_auto_commit(self, repo):
         if (repo.get_config('auto_commit')):
             self.verbose("auto_commit in " + repo.path())
-            self.run_cmd(['git', 'commit', '-m', 'git-soc autocommit', '-a'], repo.path())
+            self.run_cmd(" ".join(['git', 'commit', '-m', 'git-soc autocommit', '-a']), repo.path())
