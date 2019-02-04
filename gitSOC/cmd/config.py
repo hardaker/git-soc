@@ -35,6 +35,7 @@ class Config(gitSOC.cmd.Cmd):
 
         yamlfile=repo.path() + "/.git/git-soc.yml"
         if os.path.exists(yamlfile):
+            print("contents of " + yamlfile + ":")
             self.dump_file(yamlfile)
         else:
             print("ERROR: no git-soc.yml link!!")
