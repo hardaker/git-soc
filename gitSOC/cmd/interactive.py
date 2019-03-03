@@ -77,8 +77,10 @@ class Interactive(gitSOC.cmd.Cmd):
             if answer[0] == 'n':
 
                 if args.push_pull:
-                    self.push.push(repo,args)
+                    # need to do a pull before the push, to pull in any new changes
                     self.pull.pull(repo,args)
+                    # XXX: should stop here for checking if we're in merge conflict
+                    self.push.push(repo,args)
 
                 return
             elif answer[0] == 's':
