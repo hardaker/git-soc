@@ -20,7 +20,10 @@ class GitSOC(object):
 
     def read_yaml_file(self, filepath):
         fh = open(filepath, "r")
-        data = yaml.load(fh)
+        try:
+            data = yaml.load(fh, Loader=yaml.FullLoader)
+        except:
+            data = yaml.load(fh)
         return data
 
     def load_config_directory(self, directory, cmd):
