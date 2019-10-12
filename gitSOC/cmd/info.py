@@ -19,14 +19,18 @@ class Info(gitSOC.cmd.Cmd):
         linkname = os.getcwd() + "/.git/git-soc.yml"
         
         # read the yaml
-        file = open(linkname, "r")
-        # XXX: look upward too
-        if not file:
+        try:
+            file = open(linkname, "r")
+        except:
             print("Can not find registration information in .git/git-soc.yml")
             exit(1)
             # XXX: search for it instead in the full set
 
-        out = yaml.load(file)
+        try:
+            out = yaml.load(file, Loader=yaml.FullLoader)
+        except:
+            out = yaml.load(file)
+
         # should be prettier than this:
         if not out:
             print("could not parse the registration information from .git/git-soc.yml")
