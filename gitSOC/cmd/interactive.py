@@ -56,6 +56,13 @@ class Interactive(gitSOC.cmd.Cmd):
         print("----")
         self.status.print_repo_status(repo, args)
 
+    def maybe_push_pull(self, args):
+        if args.push_pull:
+            # need to do a pull before the push, to pull in any new changes
+            self.pull.pull(repo,args)
+            # XXX: should stop here for checking if we're in merge conflict
+            self.push.push(repo,args)
+
     def interactive(self, repo, args = None):
 
         # if push-pull, then always print the header
@@ -73,15 +80,10 @@ class Interactive(gitSOC.cmd.Cmd):
         # iteratively ask what they want to do
         while True:
             self.print_header(repo, args)
-            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','commit-all','! cmd'], default='n')
+            answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','commit-all','Commit-and-next','! cmd'], default='n')
             if answer[0] == 'n':
 
-                if args.push_pull:
-                    # need to do a pull before the push, to pull in any new changes
-                    self.pull.pull(repo,args)
-                    # XXX: should stop here for checking if we're in merge conflict
-                    self.push.push(repo,args)
-
+                self.maybe_push_pull(args)
                 return
             elif answer[0] == 's':
                 self.status.print_repo_status(repo, args)
@@ -93,10 +95,13 @@ class Interactive(gitSOC.cmd.Cmd):
                 self.diff.cmd(repo, self.diff_args)
             elif answer[0] == 'g':
                 self.gitstatus.cmd(repo, self.gitstatus_args)
-            elif answer[0] == 'c':
+            elif answer[0] == 'c' or answer[0] == 'C':
                 message = input("commit message: ")
                 self.commit_args = self.shell.parse_args(["git commit -a -m '" + message + "'"])
                 self.commit.cmd(repo, self.commit_args)
+                if answer[0] == 'C':
+                    self.maybe_push_pull(args)
+                    return
             elif answer[0] == 'q':
                 exit(0)
             elif answer[0] == "S":
