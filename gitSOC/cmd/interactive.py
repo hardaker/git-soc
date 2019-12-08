@@ -56,7 +56,7 @@ class Interactive(gitSOC.cmd.Cmd):
         print("----")
         self.status.print_repo_status(repo, args)
 
-    def maybe_push_pull(self, args):
+    def maybe_push_pull(self, args, repo):
         if args.push_pull:
             # need to do a pull before the push, to pull in any new changes
             self.pull.pull(repo,args)
@@ -83,7 +83,7 @@ class Interactive(gitSOC.cmd.Cmd):
             answer = self.pick_one("Cmd: ", ['status','diff','next','push','l-pull', 'quit', 'Shell', 'git status','commit-all','Commit-and-next','! cmd'], default='n')
             if answer[0] == 'n':
 
-                self.maybe_push_pull(args)
+                self.maybe_push_pull(args, repo)
                 return
             elif answer[0] == 's':
                 self.status.print_repo_status(repo, args)
@@ -100,7 +100,7 @@ class Interactive(gitSOC.cmd.Cmd):
                 self.commit_args = self.shell.parse_args(["git commit -a -m '" + message + "'"])
                 self.commit.cmd(repo, self.commit_args)
                 if answer[0] == 'C':
-                    self.maybe_push_pull(args)
+                    self.maybe_push_pull(args, repo)
                     return
             elif answer[0] == 'q':
                 exit(0)
