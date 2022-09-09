@@ -12,6 +12,8 @@ import gitSOC.cmd.pushpull
 import gitSOC.cmd.interactive
 import gitSOC.cmd.cmd
 import gitSOC.cmd.config
+import gitSOC.cmd.linkup
+
 import sys
 
 soc = gitSOC.GitSOC()
@@ -48,6 +50,8 @@ elif cmd == 'diff':
     args = ["git diff"]
 elif cmd == 'interactive' or cmd == "i":
     cmd = gitSOC.cmd.interactive.Interactive(soc, baseargs = baseargs)
+elif cmd == 'linkup':
+    cmd = gitSOC.cmd.linkup.Linkup(soc, baseargs = baseargs)
 elif cmd == 'git':
     cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
     args[0] = "git " + args[0]

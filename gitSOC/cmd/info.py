@@ -14,10 +14,19 @@ class Info(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
+        self.soc = soc
 
     def run(self, args):
         linkname = os.getcwd() + "/.git/git-soc.yml"
         
+        if not os.path.isfile(linkname):
+            repo = gitSOC.managedRepo.ManagedRepo(os.getcwd())
+            print(args)
+            print(repo)
+            print(repo._config)
+            import pdb ; pdb.set_trace()
+            exit()
+
         # read the yaml
         try:
             file = open(linkname, "r")

@@ -153,7 +153,7 @@ class ManagedRepo(git.Repo):
 
         # ensure this repo isn't registered somewhere
         if os.path.islink(linkname):
-            print("error:       repository already registered; refusing to reregister")
+            print("repository already registered; not re-linking")
             print("see link:    '" + repodir + "/.git/git-soc.yml'")
             print("pointing to: '" + os.path.realpath(linkname) + "'")
             return False
@@ -163,13 +163,15 @@ class ManagedRepo(git.Repo):
             return False
 
         # ensure this registration doesn't exist yet 
-        if os.path.isfile(name):
+        if name and os.path.isfile(name):
             print("error: '" + name + "' already exists")
             return False
 
         # create a sym link
+        print("--- needed: " + linkname)
         if create:
-            self.create_symlink(repodata)
+            import pdb ; pdb.set_trace()
+            self.create_symlink()
 
         return True
 
