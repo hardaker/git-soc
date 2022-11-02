@@ -6,6 +6,8 @@ import argparse
 import git
 import os
 
+from logging import debug, error, warning, info
+
 class Status(gitSOC.cmd.Cmd):
     """Command class to check the status of all the git repos"""
 

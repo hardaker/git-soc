@@ -2,6 +2,7 @@ import gitSOC.managedRepo
 import yaml
 import os
 import re
+from futures import ThreadPoolExecutor
 
 class GitSOC(object):
 
@@ -10,12 +11,20 @@ class GitSOC(object):
         for path in paths:
             self.repos.append(managedRepo.ManagedRepo(path))
 
-    def foreach_repo(self, operator, otherargs = None):
+    def foreach_repo(self, operator, otherargs = None, threaded=True):
         sortedrepos = sorted(self.repos, key=lambda k: k.path())
-        for repo in sortedrepos:
-            if 'verbose' in otherargs and otherargs.verbose:
-                print("------- " + repo.path())
-            operator(repo, otherargs)
+        if threaded:
+            handles = []
+            with ThreadPoolExecutor() as tpe:
+                for repo in sortedrepos:
+                    handles.append(tpe.submit(operator, repo, otherargs))
+                for result in handles:
+                    result.result()
+        else:
+            for repo in sortedrepos:
+                if 'verbose' in otherargs and otherargs.verbose:
+                    print("------- " + repo.path())
+                operator(repo, otherargs)
         
 
     def read_yaml_file(self, filepath):
