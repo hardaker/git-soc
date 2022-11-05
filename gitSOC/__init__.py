@@ -19,7 +19,12 @@ class GitSOC(object):
                 for repo in sortedrepos:
                     handles.append(tpe.submit(operator, repo, otherargs))
                 for result in handles:
-                    result.result()
+                    outputs = result.result()
+                    if 'verbose' in otherargs and otherargs.verbose:
+                        print("------- " + repo.path())
+                    if outputs:
+                        for output in outputs:
+                            print(output)
         else:
             for repo in sortedrepos:
                 if 'verbose' in otherargs and otherargs.verbose:

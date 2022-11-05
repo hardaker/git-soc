@@ -59,25 +59,26 @@ class Status(gitSOC.cmd.Cmd):
         if 'only_dirty' in args and args.only_dirty and not report:
             return
 
-        print("%-60s %s%s%s%s%s" % (repo.path(), dirty, index, merge, push, untracked))
+        self.output("%-60s %s%s%s%s%s" % (repo.path(), dirty, index, merge, push, untracked))
         if self._verbose:
-            print("  %-10s: %s" % ("branch:", repo.active_branch))
-            print("  %-10s: %s" % ("head:", repo.head))
-            print("  %-10s: %s" % ("branch:", repo.active_branch))
+            self.output("  %-10s: %s" % ("branch:", repo.active_branch))
+            self.output("  %-10s: %s" % ("head:", repo.head))
+            self.output("  %-10s: %s" % ("branch:", repo.active_branch))
             try:
                 remote = repo.remote()
                 if remote:
-                    print("  %-10s: %s" % ("remote:", remote.name))
+                    self.output("  %-10s: %s" % ("remote:", remote.name))
             except Exception as e:
-                print(e)
+                self.output(e)
             except:
                 pass
 
-            print("  remotes:")
+            self.output("  remotes:")
             for remote in repo.remotes:
-                print("    %-10s" % (remote.name))
+                self.output("    %-10s" % (remote.name))
                 
-            
+        return self.outputs
+    
     def run(self, args):
         self.soc.foreach_repo(self.print_repo_status, args)
         
