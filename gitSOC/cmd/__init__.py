@@ -13,14 +13,18 @@ class Cmd(object):
         self._verbose = False
         self.base = ""
         self.regex = None
-        self.outputs = []
+        self._outputs = []
 
     def verbose(self, stuff):
         if self._verbose:
             print(stuff)
 
     def output(self, stuff):
-        self.outputs.append(stuff)
+        self._outputs.append(stuff)
+
+    @property
+    def outputs(self):
+        return self._outputs
         
     def check_clean(self, repo):
         if not repo._initialized:

@@ -113,4 +113,4 @@ class Interactive(gitSOC.cmd.Cmd):
                 print("unknown option: '" + answer + "'")
 
     def run(self, args):
-        self.soc.foreach_repo(self.interactive, args)
+        self.soc.foreach_repo(self.interactive, args, threaded=false)

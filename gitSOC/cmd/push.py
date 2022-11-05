@@ -5,6 +5,8 @@ import gitSOC.cmd
 import argparse
 import git
 import os
+from logging import error 
+
 
 class Push(gitSOC.cmd.Cmd):
 
@@ -33,7 +35,7 @@ class Push(gitSOC.cmd.Cmd):
                 try:
                     remote = repo.remote(remotedef['name'])
                     if remote:
-                        print(remote)
+                        self.output(remote)
                         x = remote.push()
                         self.verbose("  push result: " + str(x))
                         self.verbose("  old: " + str(x[0].old_commit))
@@ -43,13 +45,14 @@ class Push(gitSOC.cmd.Cmd):
                     else:
                         result = "no remote - weird bug"
                 except Exception as e:
-                    print(e)
+                    error(e)
                     result = "failed"
                 except:
                     result = "won't: failed"
     
         result = result.strip()
         self.output("%-60s %s" % (repo.path(), result))
+        return self.outputs
 
     def run(self, args):
         self.soc.foreach_repo(self.push, args)

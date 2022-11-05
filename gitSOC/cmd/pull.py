@@ -5,6 +5,8 @@ import gitSOC.cmd
 import argparse
 import git
 import os
+from logging import error 
+
 
 class Pull(gitSOC.cmd.Cmd):
 
@@ -25,7 +27,7 @@ class Pull(gitSOC.cmd.Cmd):
             self.verbose("cloning " + repo.url() + " into " + repo.path())
             result = git.Repo.clone_from(repo.url(), repo.path())
             repo.init_repo()
-            print("%-60s %s" % (repo.path(), "cloned"))
+            self.output("%-60s %s" % (repo.path(), "cloned"))
             repo.create_symlink()
             return
 
@@ -61,7 +63,7 @@ class Pull(gitSOC.cmd.Cmd):
                         else:
                             result = "[up to date]"
                     except Exception as e:
-                        print(e)
+                        error(e)
                         result = "failed"
                     except:
                         result = "failed"
@@ -69,9 +71,11 @@ class Pull(gitSOC.cmd.Cmd):
                 else:
                     result = "no remote - weird bug"
             
-                print("%-60s %s" % (repo.path(), result))
+                self.output("%-60s %s" % (repo.path(), result))
         else:
-            print("%-60s %s" % (repo.path(), result))
+            self.output("%-60s %s" % (repo.path(), result))
+
+        return self.outputs
 
     def run(self, args):
         self.soc.foreach_repo(self.pull, args)

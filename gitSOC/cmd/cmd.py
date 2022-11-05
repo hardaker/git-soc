@@ -7,6 +7,7 @@ import gitSOC.cmd
 import argparse
 import git
 import os
+from logging import error 
 
 class Cmd(gitSOC.cmd.Cmd):
 
@@ -26,13 +27,13 @@ class Cmd(gitSOC.cmd.Cmd):
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         if 'command' not in parsed_args:
-            print("a command to run must be passed")
+            error("a command to run must be passed")
             exit(1)
         return parsed_args
 
     def cmd(self, repo, args):
         if args.seperator or args.ask:
-            print("--- " + repo.path())
+            self.output("--- " + repo.path())
 
         # interactive 'ask' mode
         if args.ask:
@@ -44,6 +45,8 @@ class Cmd(gitSOC.cmd.Cmd):
                 
         self.run_cmd(args.command, repo.path())
 
+        return self.outputs
+
     def run(self, args):
         self.verbose("running command: " + args.command)
-        self.soc.foreach_repo(self.cmd, args)
+        self.soc.foreach_repo(self.cmd, args, threaded=args.ask)

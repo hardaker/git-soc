@@ -5,6 +5,8 @@ import gitSOC.cmd
 import argparse
 import git
 import os
+from logging import error 
+
 
 class Fetch(gitSOC.cmd.Cmd):
 
@@ -15,7 +17,7 @@ class Fetch(gitSOC.cmd.Cmd):
     def fetch(self, repo, args = None):
         # check whether or not we have cloned it at all first
         if not os.path.isdir(repo.path()):
-            print("%-60s %s" % (repo.path(), "needs clone"))
+            self.output("%-60s %s" % (repo.path(), "needs clone"))
             return
 
         self.verbose("fetching " + repo.path() + ":")
@@ -37,12 +39,13 @@ class Fetch(gitSOC.cmd.Cmd):
                 else:
                     result = "no remote - weird bug"
             except Exception as e:
-                print(e)
+                error(e)
                 result = "failed"
             except:
                 result = "fail - crashed"
             
-        print("%-60s %s" % (repo.path(), result))
+        self.output("%-60s %s" % (repo.path(), result))
+        return self.outputs
 
     def run(self, args):
         self.soc.foreach_repo(self.fetch, args)

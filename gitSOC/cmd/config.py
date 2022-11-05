@@ -7,6 +7,7 @@ import gitSOC.cmd
 import argparse
 import git
 import os
+from logging import error 
 
 class Config(gitSOC.cmd.Cmd):
 
@@ -27,18 +28,20 @@ class Config(gitSOC.cmd.Cmd):
     def dump_file(self, filename):
         with open(filename) as f:
             for line in f:
-                print("  " + line.rstrip())
+                self.output("  " + line.rstrip())
 
 
     def config(self, repo, args):
-        print("--- " + repo.path())
+        self.output("--- " + repo.path())
 
         yamlfile=repo.path() + "/.git/git-soc.yml"
         if os.path.exists(yamlfile):
-            print("contents of " + yamlfile + ":")
+            self.output("contents of " + yamlfile + ":")
             self.dump_file(yamlfile)
         else:
-            print("ERROR: no git-soc.yml link!!")
+            error("ERROR: no git-soc.yml link!!")
+
+        return self.outputs
                
     def run(self, args):
         self.soc.foreach_repo(self.config, args)
