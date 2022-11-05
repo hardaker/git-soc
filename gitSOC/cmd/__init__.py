@@ -17,7 +17,7 @@ class Cmd(object):
 
     def verbose(self, stuff):
         if self._verbose:
-            print(stuff)
+            self.output(stuff)
 
     def output(self, stuff):
         self._outputs.append(stuff)
@@ -75,7 +75,7 @@ class Cmd(object):
         if path:
             os.chdir(path)
         self.verbose("running '" + command + "' in " + str(path))
-        result = os.system(command)
+        result = subprocess.getoutput(command)
         if path:
             os.chdir(cwd)
         return result

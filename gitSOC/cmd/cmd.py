@@ -43,10 +43,12 @@ class Cmd(gitSOC.cmd.Cmd):
             elif result == 'q':
                 exit(0)
                 
-        self.run_cmd(args.command, repo.path())
+        result = self.run_cmd(args.command, repo.path())
+        self.output(result)
 
         return self.outputs
 
     def run(self, args):
         self.verbose("running command: " + args.command)
-        self.soc.foreach_repo(self.cmd, args, threaded=args.ask)
+        self.soc.foreach_repo(self.cmd, args, threaded=(not args.ask))
+
