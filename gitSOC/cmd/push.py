@@ -52,9 +52,10 @@ class Push(gitSOC.cmd.Cmd):
     
         result = result.strip()
         self.output("%-60s %s" % (repo.path(), result))
-        return self.outputs
+        return self.return_and_clear_outputs()
+
 
     def run(self, args):
-        self.soc.foreach_repo(self.push, args)
+        return self.soc.foreach_repo(self.push, args)
         
 

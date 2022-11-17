@@ -30,7 +30,7 @@ class GitSOC(object):
                 if 'verbose' in otherargs and otherargs.verbose:
                     print("------- " + repo.path())
                 operator(repo, otherargs)
-        
+
 
     def read_yaml_file(self, filepath):
         fh = open(filepath, "r")

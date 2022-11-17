@@ -2,6 +2,8 @@ import argparse
 import subprocess
 import os
 import re
+import threading
+import collections
 
 class Cmd(object):
     def __init__(self, soc, baseargs = {}, description = "", name=""):
@@ -13,19 +15,27 @@ class Cmd(object):
         self._verbose = False
         self.base = ""
         self.regex = None
-        self._outputs = []
+        self._outputs = collections.defaultdict(list)
 
     def verbose(self, stuff):
         if self._verbose:
             self.output(stuff)
 
     def output(self, stuff):
-        self._outputs.append(stuff)
+        self._outputs[threading.get_ident()].append(stuff)
 
     @property
     def outputs(self):
-        return self._outputs
-        
+        return self._outputs[threading.get_ident()]
+
+    def clear_outputs(self):
+        self._outputs[threading.get_ident()] = []
+
+    def return_and_clear_outputs(self):
+        outputs = self.outputs
+        self.clear_outputs()
+        return outputs
+
     def check_clean(self, repo):
         if not repo._initialized:
             return "needs clone"

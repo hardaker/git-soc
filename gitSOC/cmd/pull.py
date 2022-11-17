@@ -75,9 +75,9 @@ class Pull(gitSOC.cmd.Cmd):
         else:
             self.output("%-60s %s" % (repo.path(), result))
 
-        return self.outputs
+        return self.return_and_clear_outputs()
 
     def run(self, args):
-        self.soc.foreach_repo(self.pull, args)
+        return self.soc.foreach_repo(self.pull, args)
         
 

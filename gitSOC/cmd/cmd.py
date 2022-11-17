@@ -46,7 +46,7 @@ class Cmd(gitSOC.cmd.Cmd):
         result = self.run_cmd(args.command, repo.path())
         self.output(result)
 
-        return self.outputs
+        return self.return_and_clear_outputs()
 
     def run(self, args):
         self.verbose("running command: " + args.command)

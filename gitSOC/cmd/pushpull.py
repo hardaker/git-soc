@@ -21,9 +21,12 @@ class PushPull(gitSOC.cmd.Cmd):
 
         outputs = []
         outputs.append("Pulling: -----------------")
-        outputs.extend(pullcmd.run(args))
+        pullcmd.run(args)
+        outputs.extend(pullcmd.return_and_clear_outputs())
+
         outputs.append("Pushing: -----------------")
-        outputs.extend(pushcmd.run(args))
+        pushcmd.run(args)
+        outputs.extend(pushcmd.return_and_clear_outputs())
         return outputs
         
 
