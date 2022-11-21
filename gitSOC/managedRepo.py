@@ -67,11 +67,9 @@ class ManagedRepo(git.Repo):
         # XXX: error checking for all parts
 
         return final_repos
-    
+
     def get_config(self, name, default = None):
-        if name in self._config:
-            return self._config[name]
-        return default
+        return self._config.get(name, default)
 
     def set_config(self, name, value):
         self._config[name] = value

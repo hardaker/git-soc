@@ -17,7 +17,8 @@ class GitSOC(object):
             handles = []
             with ThreadPoolExecutor() as tpe:
                 for repo in sortedrepos:
-                    handles.append(tpe.submit(operator, repo, otherargs))
+                    if not repo.get_config('disabled', False):
+                        handles.append(tpe.submit(operator, repo, otherargs))
                 for result in handles:
                     outputs = result.result()
                     if 'verbose' in otherargs and otherargs.verbose:
@@ -45,6 +46,8 @@ class GitSOC(object):
 
         else:
             for repo in sortedrepos:
+                if repo.get_config('disabled', False):
+                    continue
                 if 'verbose' in otherargs and otherargs.verbose:
                     print("------- " + repo.path())
                 operator(repo, otherargs)
@@ -67,9 +70,13 @@ class GitSOC(object):
                         print("both 'dir' and 'url' are required components")
                     else:
                         if cmd.regex is None or re.match(cmd.regex, repoconfig['dir']):
-                            self.repos.append(managedRepo.ManagedRepo(repoconfig['dir'],
-                                                                      repoconfig['url'],
-                                                                      repoconfig))
+                            self.repos.append(
+                                managedRepo.ManagedRepo(
+                                    repoconfig['dir'],
+                                    repoconfig['url'],
+                                    repoconfig
+                                )
+                            )
             elif (os.path.isdir(directory + "/" + file)):
                 self.load_config_directory(directory + "/" + file, cmd)
 
