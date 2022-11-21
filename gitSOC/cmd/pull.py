@@ -43,7 +43,7 @@ class Pull(gitSOC.cmd.Cmd):
             result = self.check_clean(repo)
 
         # if we're clean, pull away
-        if result is "clean":
+        if result == "clean":
             for base in repo.get_remotes():
                 self.verbose("pulling " + base['name'] + " -> " + repo.path() + ":")
                 remote = repo.remote(base['name'])
