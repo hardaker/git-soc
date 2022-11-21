@@ -31,10 +31,19 @@ class Cmd(gitSOC.cmd.Cmd):
             exit(1)
         return parsed_args
 
-    def cmd(self, repo, args):
-        if args.seperator or args.ask:
-            self.output("--- " + repo.path())
+    def run_actual(self, repo, args):
+        result = self.run_cmd(args.command, repo.path())
+        self.output(result)
 
+        return self.return_and_clear_outputs()
+
+    def cmd_ask(self, repo, args):
+        result = self.pick_one("Run here: ", ['yes', 'no', 'quit'], default = 'y')
+        if result == 'n':
+            return None
+        return [self.run_it, repo, args]
+
+    def cmd(self, repo, args):
         # interactive 'ask' mode
         if args.ask:
             result = self.pick_one("Run here: ", ['yes', 'no', 'quit'], default = 'y')
@@ -42,11 +51,8 @@ class Cmd(gitSOC.cmd.Cmd):
                 return
             elif result == 'q':
                 exit(0)
-                
-        result = self.run_cmd(args.command, repo.path())
-        self.output(result)
 
-        return self.return_and_clear_outputs()
+        return self.run_actual(repo, args)
 
     def run(self, args):
         self.verbose("running command: " + args.command)

@@ -23,14 +23,31 @@ class GitSOC(object):
                     if 'verbose' in otherargs and otherargs.verbose:
                         print("------- " + repo.path())
                     if outputs:
-                        for output in outputs:
-                            print(output)
+                        if isinstance(outputs, list):
+                            for output in outputs:
+                                print(output)
+                        elif isinstance(outputs, str):
+                            print(outputs)
+                        elif isinstance(outputs, dict):
+                            # if they need something in UI thread, bring it
+                            # back and call it locally
+                            if 'interrupt' not in outputs:
+                                raise ValueError("unknown dict type returned from command " + str(outputs))
+                            result = outputs['interrupt'](*outputs.get('arguments', []))
+                            if result:
+                                if isinstance(result, list):
+                                    handles.append(tpe.submit(*result))
+                                else:
+                                    handles.append(tpe.submit(result))
+                            print(outputs)
+                        else:
+                            raise ValueError("unknown type returned from command " + type(outputs))
+
         else:
             for repo in sortedrepos:
                 if 'verbose' in otherargs and otherargs.verbose:
                     print("------- " + repo.path())
                 operator(repo, otherargs)
-
 
     def read_yaml_file(self, filepath):
         fh = open(filepath, "r")

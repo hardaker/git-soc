@@ -63,20 +63,7 @@ class Interactive(gitSOC.cmd.Cmd):
             # XXX: should stop here for checking if we're in merge conflict
             self.push.push(repo,args)
 
-    def interactive(self, repo, args = None):
-
-        # if push-pull, then always print the header
-        if args.push_pull:
-            self.print_header(repo, args)
-
-        if args.push_pull:
-            self.push.push(repo,args)
-            self.pull.pull(repo,args)
-
-        # we were told to skip non-dirty things
-        if args.dirty and not repo.is_dirty():
-            return
-
+    def prompter(self, repo, args):
         # iteratively ask what they want to do
         while True:
             self.print_header(repo, args)
@@ -112,5 +99,25 @@ class Interactive(gitSOC.cmd.Cmd):
             else:
                 print("unknown option: '" + answer + "'")
 
+        return None
+
+    def interactive(self, repo, args = None):
+
+        # if push-pull, then always print the header
+        if args.push_pull:
+            self.print_header(repo, args)
+
+        if args.push_pull:
+            self.push.push(repo,args)
+            self.pull.pull(repo,args)
+
+        # we were told to skip non-dirty things
+        if args.dirty and not repo.is_dirty():
+            return
+
+        # iteratively ask what they want to do
+        return { 'interrupt': self.prompter,
+                 'arguments': [repo, args] }
+
     def run(self, args):
-        self.soc.foreach_repo(self.interactive, args, threaded=false)
+        self.soc.foreach_repo(self.interactive, args)
