@@ -38,6 +38,10 @@ class Config(gitSOC.cmd.Cmd):
         if os.path.exists(yamlfile):
             self.output("contents of " + yamlfile + ":")
             self.dump_file(yamlfile)
+
+            self.output("# other options with their defaults but not yet set:")
+            for option in repo.options:
+                self.output(f"    # {option}: {repo.get_config(option)}")
         else:
             error("ERROR: no git-soc.yml link!!")
 

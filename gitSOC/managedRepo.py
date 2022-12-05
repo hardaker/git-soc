@@ -11,8 +11,16 @@ class ManagedRepo(git.Repo):
         self._initialized = False
         self._url = url
         self._config = repoconfig
+
+        self._options = {
+            'disabled': False,
+        }
         
         self.init_repo()
+
+    @property
+    def options(self):
+        return self._options
 
     def save(self, name = None, config = None):
 
@@ -69,7 +77,7 @@ class ManagedRepo(git.Repo):
         return final_repos
 
     def get_config(self, name, default = None):
-        return self._config.get(name, default)
+        return self._config.get(name, default or self.options.get(name))
 
     def set_config(self, name, value):
         self._config[name] = value
