@@ -14,7 +14,8 @@ class ManagedRepo(git.Repo):
 
         self._options = {
             'disabled': False,
-            'remotes': 'origin/main'
+            'remotes': 'origin/main',
+            'active_branches': 'main,master',
         }
         
         self.init_repo()
@@ -102,9 +103,6 @@ class ManagedRepo(git.Repo):
         self._config['gitrepos'][0][name] = value
         # XXX: set now and save? just set and move save to different function?
         pass
-
-    def auto_commit(self):
-        return self._auto_commit
 
     def is_dirty(self, index=True, working_tree=True):
         if not self._initialized:

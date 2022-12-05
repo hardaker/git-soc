@@ -54,7 +54,9 @@ class Cmd(object):
     def check_clean(self, repo):
         if not repo._initialized:
             return "needs clone"
-        if str(repo.active_branch) not in ["master", "main"]:
+        active_branches = repo.get_config("active_branches")
+        active_branches = active_branches.split(",")
+        if str(repo.active_branch) not in active_branches:
             self.verbose("  clean check: [branch is '" + str(repo.active_branch) + "' and not 'master']")
             return "won't: not master or main"
         elif repo.is_dirty():
