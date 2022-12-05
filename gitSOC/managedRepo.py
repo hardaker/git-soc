@@ -14,6 +14,7 @@ class ManagedRepo(git.Repo):
 
         self._options = {
             'disabled': False,
+            'remotes': 'origin/main'
         }
         
         self.init_repo()
@@ -80,7 +81,7 @@ class ManagedRepo(git.Repo):
         return self._url
 
     def get_remotes(self):
-        repos = self.get_config("remotes", ['origin/master'])
+        repos = self.get_config("remotes")
         if not isinstance(repos, list):
             repos = [repos]
 
