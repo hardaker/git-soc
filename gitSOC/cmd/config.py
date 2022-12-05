@@ -21,7 +21,8 @@ class Config(gitSOC.cmd.Cmd):
                                     epilog="Example: git soc cmd ls")
         p.add_argument( "-s", "--set", type=str,
                        help="Update the configuration based on this content")
-        p.add_argument("-a", "--all", type=argparse.FileType("r"),
+
+        p.add_argument("-a", "--all", action="store_true",
                        help="Dump the variables for all repos (not recommended with -s)")
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
