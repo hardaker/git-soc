@@ -48,8 +48,10 @@ args = args[2:]
 # check for help requests first
 if cmd == "-h" or cmd == "--help" or cmd == "help":
     print("Usage: " + sys.argv[0] + " COMMAND [-B basedir] <COMMAND ARGS>")
-    print("Commands available:")
-    print("    " + "\n    ".join(["register","info","config","status","interactive","pull","push","pushpull","command", "enable", "disable"]))
+    print("\nCommands available that act on the current repo:")
+    print("    " + "\n    ".join(["register","info","config","enable","disable",]))
+    print("\nCommands available that act on all repos:")
+    print("    " + "\n    ".join(["status","interactive","pull","push","pushpull","command", "enable", "disable"]))
     print("\nSee the --help output of each command for further details")
     exit(0)
 
