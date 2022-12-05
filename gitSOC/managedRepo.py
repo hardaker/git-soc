@@ -4,6 +4,8 @@ import yaml
 import git
 import os
 
+from logging import error
+
 class ManagedRepo(git.Repo):
 
     def __init__(self, path = None, url = None, repoconfig = {}):
@@ -29,6 +31,10 @@ class ManagedRepo(git.Repo):
         # if not self.check_symlink():
         #     error("unable to locate git-soc config")
         return self.get_config_path()
+
+    @property
+    def path(self):
+        return self._path
 
     def load(self, filepath: str = None):
         if not filepath:
@@ -149,7 +155,7 @@ class ManagedRepo(git.Repo):
                     elif self.merge_base(origin, head)[0] != origin:
                         return True
             except:
-                print("ERROR: needs_merge failed")
+                error(f"needs_merge failed for {self._path}")
                 return True
         
         return False
