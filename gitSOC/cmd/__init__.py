@@ -4,6 +4,7 @@ import os
 import re
 import threading
 import collections
+import logging
 try:
     from rich import print
 except Exeption:
@@ -66,7 +67,13 @@ class Cmd(object):
                                     description=self.description,
                                     prog="git-soc " + self.name)
         parsed_args = p.parse_args(args = args)
+
         self.register_parsed_args(parsed_args)
+
+        log_level = parsed_args.log_level.upper()
+        logging.basicConfig(level=log_level,
+                            format="%(levelname)-10s:\t%(message)s")
+
         return parsed_args
 
     def get_global_parse_args(self):
@@ -79,6 +86,8 @@ class Cmd(object):
                                             help="Directory where YAML config files are found")
             self.global_parser.add_argument("--regex","-R",
                                             help="Regexp to limit repos to use")
+            self.global_parser.add_argument("--log-level", "--ll", default="info",
+                                            help="Define the logging verbosity level (debug, info, warning, error, fotal, critical).")
             self.global_parser.add_argument("--verbose", "-v",
                                             action="store_true",
                                             help="Verbose mode")

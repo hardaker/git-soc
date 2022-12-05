@@ -2,6 +2,7 @@ import gitSOC.managedRepo
 import yaml
 import os
 import re
+import logging
 from futures import ThreadPoolExecutor
 
 class GitSOC(object):

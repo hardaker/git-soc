@@ -13,6 +13,8 @@ import gitSOC.cmd.interactive
 import gitSOC.cmd.cmd
 import gitSOC.cmd.config
 import gitSOC.cmd.linkup
+import gitSOC.cmd.disable
+import gitSOC.cmd.enable
 
 import sys
 
@@ -43,6 +45,10 @@ elif cmd == 'pushpull' or cmd == "pp":
     cmd = gitSOC.cmd.pushpull.PushPull(soc, baseargs = baseargs)
 elif cmd == 'config':
     cmd = gitSOC.cmd.config.Config(soc, baseargs = baseargs)
+elif cmd == 'enable':
+    cmd = gitSOC.cmd.enable.Enable(soc, baseargs = baseargs)
+elif cmd == 'disable':
+    cmd = gitSOC.cmd.disable.Disable(soc, baseargs = baseargs)
 elif cmd == 'command' or cmd == "cmd":
     cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
 elif cmd == 'diff':
