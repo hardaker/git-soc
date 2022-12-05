@@ -4,6 +4,10 @@ import os
 import re
 import threading
 import collections
+try:
+    from rich import print
+except Exeption:
+    pass
 
 class Cmd(object):
     def __init__(self, soc, baseargs = {}, description = "", name=""):
@@ -35,6 +39,16 @@ class Cmd(object):
         outputs = self.outputs
         self.clear_outputs()
         return outputs
+
+    def print_outputs(self, outputs = None):
+        if not outputs:
+            outputs = self._outputs
+        for output in outputs:
+            print(output)
+
+    def print_and_clear_outputs(self):
+        self.print_outputs()
+        self.clear_outputs()
 
     def check_clean(self, repo):
         if not repo._initialized:
@@ -118,3 +132,4 @@ class Cmd(object):
         if (repo.get_config('auto_commit')):
             self.verbose("auto_commit in " + repo.path())
             self.run_cmd(" ".join(['git', 'commit', '-m', 'git-soc autocommit', '-a']), repo.path())
+        

@@ -6,8 +6,8 @@ import os
 
 class ManagedRepo(git.Repo):
 
-    def __init__(self, path, url = None, repoconfig = {}):
-        self._path = path
+    def __init__(self, path = None, url = None, repoconfig = {}):
+        self._path = path or os.getcwd()
         self._initialized = False
         self._url = url
         self._config = repoconfig
@@ -22,22 +22,37 @@ class ManagedRepo(git.Repo):
     def options(self):
         return self._options
 
-    def save(self, name = None, config = None):
+    @property
+    def config_file(self):
+        # if not self.check_symlink():
+        #     error("unable to locate git-soc config")
+        return self.get_config_path()
+
+    def load(self, filepath: str = None):
+        if not filepath:
+            filepath = self.config_file
+            
+        fh = open(filepath, "r")
+        try:
+            data = yaml.load(fh, Loader=yaml.FullLoader)
+        except:
+            data = yaml.load(fh)
+        self._config = data
+        return data
+
+    def save(self, save_path = None, config = None):
 
         if not config:
             config = self._config
-        if not name:
-            name = config['name']
+        if not save_path:
+            save_path = self.config_file
             
         # create the directory structure if needed
-        if not os.path.isdir(os.path.dirname(name)):
-            os.makedirs(os.path.dirname(name))
+        if not os.path.isdir(os.path.dirname(save_path)):
+            os.makedirs(os.path.dirname(save_path))
             
-        # convert the current repo info into yaml
-        output = { 'gitrepos': [config]}
-
-        file = open(name, "w")
-        out = yaml.safe_dump(output,default_flow_style=False)
+        file = open(save_path, "w")
+        out = yaml.safe_dump(config,default_flow_style=False)
         file.write(out)
 
     def init_repo(self):
@@ -52,6 +67,9 @@ class ManagedRepo(git.Repo):
         if os.path.isdir(self._path):
             self._initialized = True
             git.Repo.__init__(self, self._path)
+
+        if not self._config and self._path:
+            self.load()
 
         return self._initialized
 
@@ -80,7 +98,7 @@ class ManagedRepo(git.Repo):
         return self._config.get(name, default or self.options.get(name))
 
     def set_config(self, name, value):
-        self._config[name] = value
+        self._config['gitrepos'][0][name] = value
         # XXX: set now and save? just set and move save to different function?
         pass
 
@@ -148,12 +166,17 @@ class ManagedRepo(git.Repo):
                 save_name = "../" + save_name
             os.symlink(save_name, linkname)
         
+    def get_config_path(self):
+        repodir = self.get_config('dir') or self._path
+        linkname = repodir + "/.git/git-soc.yml"
+        return linkname
+
     def check_symlink(self, create = True):
         if not self.is_initialized():
             return False
 
-        print(self)
-        repodir = self.get_config('dir')
+        # print(self)
+        repodir = self.get_config('dir') or self._path
         name = self.get_config('name')
         linkname = repodir + "/.git/git-soc.yml"
 

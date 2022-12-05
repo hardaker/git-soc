@@ -11,6 +11,27 @@ class GitSOC(object):
         for path in paths:
             self.repos.append(managedRepo.ManagedRepo(path))
 
+    def handle_outputs(self, outputs):
+        if isinstance(outputs, list):
+            for output in outputs:
+                print(output)
+        elif isinstance(outputs, str):
+            print(outputs)
+        elif isinstance(outputs, dict):
+            # if they need something in UI thread, bring it
+            # back and call it locally
+            if 'interrupt' not in outputs:
+                raise ValueError("unknown dict type returned from command " + str(outputs))
+            result = outputs['interrupt'](*outputs.get('arguments', []))
+            if result:
+                if isinstance(result, list):
+                    handles.append(tpe.submit(*result))
+                else:
+                    handles.append(tpe.submit(result))
+            print(outputs)
+        else:
+            raise ValueError("unknown type returned from command " + type(outputs))
+
     def foreach_repo(self, operator, otherargs = None, threaded=True):
         sortedrepos = sorted(self.repos, key=lambda k: k.path())
         if threaded:
@@ -24,26 +45,7 @@ class GitSOC(object):
                     if 'verbose' in otherargs and otherargs.verbose:
                         print("------- " + repo.path())
                     if outputs:
-                        if isinstance(outputs, list):
-                            for output in outputs:
-                                print(output)
-                        elif isinstance(outputs, str):
-                            print(outputs)
-                        elif isinstance(outputs, dict):
-                            # if they need something in UI thread, bring it
-                            # back and call it locally
-                            if 'interrupt' not in outputs:
-                                raise ValueError("unknown dict type returned from command " + str(outputs))
-                            result = outputs['interrupt'](*outputs.get('arguments', []))
-                            if result:
-                                if isinstance(result, list):
-                                    handles.append(tpe.submit(*result))
-                                else:
-                                    handles.append(tpe.submit(result))
-                            print(outputs)
-                        else:
-                            raise ValueError("unknown type returned from command " + type(outputs))
-
+                        self.handle_outputs(outputs)
         else:
             for repo in sortedrepos:
                 if repo.get_config('disabled', False):
@@ -85,6 +87,7 @@ class GitSOC(object):
             'base': os.environ['HOME'] + '/lib/gitrepos.d'
         }
         return baseargs
+
 
 if __name__ == "__main__":
     mrs = GitSOC(["."])
