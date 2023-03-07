@@ -2,7 +2,7 @@ import gitSOC.managedRepo
 import yaml
 import os
 import re
-from futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 class GitSOC(object):
 
