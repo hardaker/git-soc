@@ -7,7 +7,7 @@ import gitSOC.cmd
 import argparse
 import git
 import os
-from logging import error 
+from logging import error,info
 
 class Config(gitSOC.cmd.Cmd):
 
@@ -19,8 +19,11 @@ class Config(gitSOC.cmd.Cmd):
                                     prog="git-soc config",
                                     description="Displays stored yaml configuration for repos.",
                                     epilog="Example: git soc cmd ls")
-        p.add_argument("--set", "-s", type=argparse.FileType("r"),
+        p.add_argument( "-s", "--set", type=str,
                        help="Update the configuration based on this content")
+
+        p.add_argument("-a", "--all", action="store_true",
+                       help="Dump the variables for all repos (not recommended with -s)")
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         return parsed_args
@@ -35,13 +38,29 @@ class Config(gitSOC.cmd.Cmd):
         self.output("--- " + repo.path())
 
         yamlfile=repo.path() + "/.git/git-soc.yml"
-        if os.path.exists(yamlfile):
-            self.output("contents of " + yamlfile + ":")
-            self.dump_file(yamlfile)
-        else:
-            error("ERROR: no git-soc.yml link!!")
+        if not os.path.exists(yamlfile):
+            error("ERROR: broken (old?) registry -- no git-soc.yml link!!")
+            return
+
+        if args.set:
+            (variable, value) = args.set.split("=")
+            config = repo.set_config(variable, value)
+            repo.save()
+            info(f"saved {variable} = {value}")
+            return self.return_and_clear_outputs()
+
+        self.output("contents of " + yamlfile + ":")
+        self.dump_file(yamlfile)
+        
+        self.output("# other options with their defaults but not yet set:")
+        for option in repo.options:
+            self.output(f"    # {option}: {repo.get_config(option)}")
 
         return self.return_and_clear_outputs()
                
     def run(self, args):
-        self.soc.foreach_repo(self.config, args)
+        if args.all:
+            self.soc.foreach_repo(self.config, args)
+        outputs = self.config(gitSOC.managedRepo.ManagedRepo(), args)
+        self.print_outputs(outputs)
+        

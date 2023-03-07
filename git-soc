@@ -2,6 +2,9 @@
 
 import gitSOC
 import argparse
+import importlib
+from logging import error
+
 import gitSOC.cmd.register
 import gitSOC.cmd.status
 import gitSOC.cmd.info
@@ -13,11 +16,26 @@ import gitSOC.cmd.interactive
 import gitSOC.cmd.cmd
 import gitSOC.cmd.config
 import gitSOC.cmd.linkup
+import gitSOC.cmd.disable
+import gitSOC.cmd.enable
 
 import sys
 
 soc = gitSOC.GitSOC()
 baseargs = soc.parse_global_args()
+aliases = {
+    'i': {
+        'name': 'interactive'
+    },
+    'diff': {
+        'name': 'cmd',
+        'args': ["git diff"]
+    },
+    'git': {
+        'name': 'cmd',
+        'args': ['git']
+    }
+}
 
 args = sys.argv
 
@@ -27,42 +45,28 @@ cmd = args[1]
 # drop the exec file and the command name
 args = args[2:]
 
-if cmd == 'register':
-    cmd = gitSOC.cmd.register.Register(soc, baseargs = baseargs)
-elif cmd == 'status':
-    cmd = gitSOC.cmd.status.Status(soc, baseargs = baseargs)
-elif cmd == 'info':
-    cmd = gitSOC.cmd.info.Info(soc, baseargs = baseargs)
-elif cmd == 'pull':
-    cmd = gitSOC.cmd.pull.Pull(soc, baseargs = baseargs)
-elif cmd == 'fetch':
-    cmd = gitSOC.cmd.fetch.Fetch(soc, baseargs = baseargs)
-elif cmd == 'push':
-    cmd = gitSOC.cmd.push.Push(soc, baseargs = baseargs)
-elif cmd == 'pushpull' or cmd == "pp":
-    cmd = gitSOC.cmd.pushpull.PushPull(soc, baseargs = baseargs)
-elif cmd == 'config':
-    cmd = gitSOC.cmd.config.Config(soc, baseargs = baseargs)
-elif cmd == 'command' or cmd == "cmd":
-    cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
-elif cmd == 'diff':
-    cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
-    args = ["git diff"]
-elif cmd == 'interactive' or cmd == "i":
-    cmd = gitSOC.cmd.interactive.Interactive(soc, baseargs = baseargs)
-elif cmd == 'linkup':
-    cmd = gitSOC.cmd.linkup.Linkup(soc, baseargs = baseargs)
-elif cmd == 'git':
-    cmd = gitSOC.cmd.cmd.Cmd(soc, baseargs = baseargs)
-    args[0] = "git " + args[0]
-elif cmd == "-h" or cmd == "--help" or cmd == "help":
+# check for help requests first
+if cmd == "-h" or cmd == "--help" or cmd == "help":
     print("Usage: " + sys.argv[0] + " COMMAND [-B basedir] <COMMAND ARGS>")
-    print("Commands available:")
-    print("    " + "\n    ".join(["register","info","status","interactive","pull","push","pushpull","command"]))
+    print("\nCommands available that act on the current repo:")
+    print("    " + "\n    ".join(["register","info","config","enable","disable",]))
+    print("\nCommands available that act on all repos:")
+    print("    " + "\n    ".join(["status","interactive","pull","push","pushpull","command", "enable", "disable"]))
     print("\nSee the --help output of each command for further details")
     exit(0)
-else:
-    print("unknown command: " + cmd)
+
+try:
+    if cmd in aliases:
+        if 'args' in aliases[cmd]:
+            args = aliases[cmd]['args'] + args
+        cmd = aliases[cmd]['name']
+        error(cmd)
+        error(args)
+    module = importlib.import_module(f"gitSOC.cmd.{cmd}")
+    cmd = getattr(module, cmd.capitalize())
+    cmd = cmd(soc, baseargs = baseargs)
+except Exception:
+    error(f"unknown command: {cmd}")
     exit(1)
     
 parsed_args = cmd.parse_args(args)

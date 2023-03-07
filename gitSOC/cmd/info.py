@@ -17,14 +17,14 @@ class Info(gitSOC.cmd.Cmd):
         self.soc = soc
 
     def run(self, args):
-        linkname = os.getcwd() + "/.git/git-soc.yml"
+        repo = gitSOC.managedRepo.ManagedRepo()
+        linkname = repo.config_file
         
         if not os.path.isfile(linkname):
             repo = gitSOC.managedRepo.ManagedRepo(os.getcwd())
             print(args)
             print(repo)
             print(repo._config)
-            import pdb ; pdb.set_trace()
             exit()
 
         # read the yaml
