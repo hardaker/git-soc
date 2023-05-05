@@ -58,7 +58,7 @@ class Cmd(object):
         active_branches = active_branches.split(",")
         if str(repo.active_branch) not in active_branches:
             self.verbose("  clean check: [branch is '" + str(repo.active_branch) + "' and not 'master']")
-            return "won't: not master or main"
+            return f"won't: current branch '{repo.active_branch}' not in active_branches list:  {active_branches}"
         elif repo.is_dirty():
             return "won't: dirty"
         else:
