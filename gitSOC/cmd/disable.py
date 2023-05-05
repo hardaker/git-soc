@@ -16,7 +16,7 @@ class Disable(gitSOC.cmd.Cmd):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs)
         self.soc = soc
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         repo = gitSOC.managedRepo.ManagedRepo()
         repo.set_config('disabled', True)
         repo.save()

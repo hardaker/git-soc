@@ -58,7 +58,7 @@ class Config(gitSOC.cmd.Cmd):
 
         return self.return_and_clear_outputs()
                
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         if args.all:
             self.soc.foreach_repo(self.config, args)
         outputs = self.config(gitSOC.managedRepo.ManagedRepo(), args)

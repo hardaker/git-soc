@@ -15,7 +15,7 @@ class Pushpull(gitSOC.cmd.Cmd):
                                 name="pushpull",
                                 description="Functionally equivelent to running 'git soc pull ; git soc pull.")
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         pullcmd = gitSOC.cmd.pull.Pull(self.soc, self.baseargs)
         pushcmd = gitSOC.cmd.push.Push(self.soc, self.baseargs)
 

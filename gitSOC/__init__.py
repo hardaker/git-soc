@@ -66,11 +66,12 @@ class GitSOC(object):
 
     def load_config_directory(self, directory, cmd):
         for file in os.listdir(directory):
-            if (os.path.isfile(directory + "/" + file) and file[-3:] == "yml"):
-                data = self.read_yaml_file(directory + "/" + file)
+            yaml_file = os.path.join(directory, file)
+            if (os.path.isfile(yaml_file) and file[-3:] == "yml"):
+                data = self.read_yaml_file(yaml_file)
                 for repoconfig in data['gitrepos']:
                     if 'dir' not in repoconfig or 'url' not in repoconfig:
-                        print("Error in " + directory + "/" + file)
+                        print("Error in " + yaml_file)
                         print("both 'dir' and 'url' are required components")
                     else:
                         if cmd.regex is None or re.match(cmd.regex, repoconfig['dir']):
@@ -78,10 +79,12 @@ class GitSOC(object):
                                 managedRepo.ManagedRepo(
                                     repoconfig['dir'],
                                     repoconfig['url'],
-                                    repoconfig
+                                    repoconfig,
+                                    yaml_file,
+                                    self
                                 )
                             )
-            elif (os.path.isdir(directory + "/" + file)):
+            elif (os.path.isdir(yaml_file)):
                 self.load_config_directory(directory + "/" + file, cmd)
 
     def parse_global_args(self):

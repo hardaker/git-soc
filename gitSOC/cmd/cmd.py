@@ -54,7 +54,7 @@ class Cmd(gitSOC.cmd.Cmd):
 
         return self.run_actual(repo, args)
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         self.verbose("running command: " + args.command)
         self.soc.foreach_repo(self.cmd, args, threaded=(not args.ask))
 

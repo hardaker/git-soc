@@ -80,7 +80,7 @@ class Status(gitSOC.cmd.Cmd):
         return self.return_and_clear_outputs()
 
     
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         self.soc.foreach_repo(self.print_repo_status, args)
         
 

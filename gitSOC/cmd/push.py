@@ -55,7 +55,7 @@ class Push(gitSOC.cmd.Cmd):
         return self.return_and_clear_outputs()
 
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         return self.soc.foreach_repo(self.push, args)
         
 
