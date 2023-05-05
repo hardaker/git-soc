@@ -8,7 +8,7 @@ import os
 import gitSOC.cmd.push
 import gitSOC.cmd.pull
 
-class PushPull(gitSOC.cmd.Cmd):
+class Pushpull(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs,
