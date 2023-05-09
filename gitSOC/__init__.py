@@ -3,7 +3,7 @@ import yaml
 import os
 import re
 import logging
-from futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 class GitSOC(object):
 
