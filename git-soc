@@ -4,6 +4,7 @@ import gitSOC
 import argparse
 import importlib
 from logging import error
+import traceback
 
 import gitSOC.cmd.register
 import gitSOC.cmd.status
@@ -65,8 +66,12 @@ try:
     module = importlib.import_module(f"gitSOC.cmd.{cmd}")
     cmd = getattr(module, cmd.capitalize())
     cmd = cmd(soc, baseargs = baseargs)
-except Exception:
-    error(f"unknown command: {cmd}")
+except Exception as ee:
+    if isinstance(ee, ModuleNotFoundError):
+        error(f"unknown command: {cmd}")
+    else:
+        print(f"exception: {ee}")
+        traceback.print_exc()
     exit(1)
     
 parsed_args = cmd.parse_args(args)

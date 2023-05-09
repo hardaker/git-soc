@@ -8,18 +8,20 @@ from logging import error
 
 class ManagedRepo(git.Repo):
 
-    def __init__(self, path = None, url = None, repoconfig = {}):
+    def __init__(self, path = None, url = None, repoconfig = {}, yaml_file = None, soc = None):
         self._path = path or os.getcwd()
         self._initialized = False
         self._url = url
         self._config = repoconfig
+        self.yaml_file = yaml_file
+        self.soc = soc
 
         self._options = {
             'disabled': False,
             'remotes': 'origin/main',
             'active_branches': 'main,master',
         }
-        
+
         self.init_repo()
 
     @property
@@ -39,7 +41,7 @@ class ManagedRepo(git.Repo):
     def load(self, filepath: str = None):
         if not filepath:
             filepath = self.config_file
-            
+
         fh = open(filepath, "r")
         try:
             data = yaml.load(fh, Loader=yaml.FullLoader)
@@ -157,23 +159,31 @@ class ManagedRepo(git.Repo):
             except:
                 error(f"needs_merge failed for {self._path}")
                 return True
-        
+
         return False
 
     def create_symlink(self):
-        linkname = self.get_config('dir') + "/.git/git-soc.yml"
+        our_dir = self.get_config('dir') 
+        linkname = os.path.join(our_dir, ".git", "git-soc.yml")
 
         # create a sym link
         save_name = self.get_config('name')
+
+        # find where we should link to
+        if not save_name:
+            for repo in self.soc.repos:
+                if repo.get_config('dir') == our_dir:
+                    save_name = repo.yaml_file
+
         if not os.path.islink(linkname) and save_name != None:
             if save_name[:3] == "../":
                 # relative link add in another ../
                 save_name = "../" + save_name
             os.symlink(save_name, linkname)
-        
+
     def get_config_path(self):
         repodir = self.get_config('dir') or self._path
-        linkname = repodir + "/.git/git-soc.yml"
+        linkname = os.path.join(repodir, ".git", "git-soc.yml")
         return linkname
 
     def check_symlink(self, create = True):
@@ -188,8 +198,8 @@ class ManagedRepo(git.Repo):
         # ensure this repo isn't registered somewhere
         if os.path.islink(linkname):
             print("repository already registered; not re-linking")
-            print("see link:    '" + repodir + "/.git/git-soc.yml'")
-            print("pointing to: '" + os.path.realpath(linkname) + "'")
+            print("  see link:    '" + linkname + "'")
+            print("  pointing to: '" + os.path.realpath(linkname) + "'")
             return False
 
         if os.path.isdir(linkname) or os.path.isfile(linkname):
@@ -202,9 +212,9 @@ class ManagedRepo(git.Repo):
             return False
 
         # create a sym link
-        print("--- needed: " + linkname)
+        print("symlink missing: " + linkname)
         if create:
-            import pdb ; pdb.set_trace()
+            print("will try to create it")
             self.create_symlink()
 
         return True

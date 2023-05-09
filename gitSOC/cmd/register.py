@@ -32,7 +32,7 @@ class Register(gitSOC.cmd.Cmd):
             exit(1)
         return parsed_args
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         args.name = args.base + "/" + args.name + ".yml"
 
         # create a real repo to have it figure out the true base path

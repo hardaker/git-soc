@@ -119,5 +119,5 @@ class Interactive(gitSOC.cmd.Cmd):
         return { 'interrupt': self.prompter,
                  'arguments': [repo, args] }
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         self.soc.foreach_repo(self.interactive, args)

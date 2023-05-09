@@ -47,7 +47,7 @@ class Fetch(gitSOC.cmd.Cmd):
         self.output("%-60s %s" % (repo.path(), result))
         return self.return_and_clear_outputs()
 
-    def run(self, args):
+    def run(self, args, *other_args, **kwargs):
         self.soc.foreach_repo(self.fetch, args)
         
 
