@@ -35,7 +35,6 @@ class Push(gitSOC.cmd.Cmd):
                 try:
                     remote = repo.remote(remotedef['name'])
                     if remote:
-                        self.output(remote)
                         x = remote.push()
                         self.verbose("  push result: " + str(x))
                         self.verbose("  old: " + str(x[0].old_commit))
