@@ -70,7 +70,7 @@ class Pull(gitSOC.cmd.Cmd):
 
                 else:
                     result = "no remote - weird bug"
-            
+
                 self.output("%-60s %s" % (repo.path(), result))
         else:
             self.output("%-60s %s" % (repo.path(), result))
@@ -79,5 +79,3 @@ class Pull(gitSOC.cmd.Cmd):
 
     def run(self, args, *other_args, **kwargs):
         return self.soc.foreach_repo(self.pull, args)
-        
-

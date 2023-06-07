@@ -28,5 +28,3 @@ class Pushpull(gitSOC.cmd.Cmd):
         pushcmd.run(args)
         outputs.extend(pushcmd.return_and_clear_outputs())
         return outputs
-        
-
