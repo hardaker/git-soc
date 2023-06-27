@@ -18,7 +18,7 @@ class Config(gitSOC.cmd.Cmd):
         p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
                                     prog="git-soc config",
                                     description="Displays stored yaml configuration for repos.",
-                                    epilog="Example: git soc cmd ls")
+                                    epilog="Example: git soc config")
         p.add_argument( "-s", "--set", type=str,
                        help="Update the configuration based on this content")
 
