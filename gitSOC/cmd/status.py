@@ -6,7 +6,7 @@ import argparse
 import git
 import os
 
-from logging import debug, error, warning, info
+from logging import debug, error, warning, info, basicConfig
 
 class Status(gitSOC.cmd.Cmd):
     """Command class to check the status of all the git repos"""
@@ -24,6 +24,11 @@ class Status(gitSOC.cmd.Cmd):
         p.add_argument("-u", "--untracked", action="store_true",
                        help="Check for untracked files too (slow)")
         parsed_args = p.parse_args(args = args)
+
+        log_level = parsed_args.log_level.upper()
+        basicConfig(level=log_level,
+                    format="%(levelname)-10s:\t%(message)s")
+
         self.register_parsed_args(parsed_args)
         return parsed_args
 
