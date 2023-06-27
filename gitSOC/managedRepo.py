@@ -119,17 +119,33 @@ class ManagedRepo(git.Repo):
 
         return git.Repo.is_dirty(self, index = index, working_tree = working_tree)
 
+    def check_active_branch(self):
+        """checks to see if the current branch is an active branch or not
+
+        returns False when its not, or the (str) active branch name when it is
+        """
+        branches = self.get_config("active_branches").split(",")
+        active_branch = str(self.active_branch)
+        if active_branch not in branches:
+            warning(f"checked out branch {active_branch} is not in active_branches: {branches}")
+            return False
+        return active_branch
+        
     def needs_push(self, verbose = False):
+        """Returns True if the checkout needs to be pushed"""
         if not self._initialized:
             return False
 
         remotes = self.get_remotes()
         result = False
+        active_branch = self.check_active_branch()
+        if not active_branch:
+            return False
 
         for remote in remotes:
             try:
                 head = self.commit()
-                merge_base = self.merge_base(remote['name'] + "/" + remote['branch'], head)[0]
+                merge_base = self.merge_base(remote['name'] + "/" + active_branch, head)[0]
                 if verbose:
                     print(" cur head:   " + head)
                     print(" merge_base: " + merge_base)
@@ -142,17 +158,17 @@ class ManagedRepo(git.Repo):
         return result
 
     def needs_merge(self):
+        """Returns True if the checkout needs to be merged with an upstream"""
         if not self._initialized:
             return False
 
         for remote in self.get_remotes():
             try:
                 head = self.commit()
-                branches = self.get_config("active_branches").split(",")
-                active_branch = str(self.active_branch)
-                if active_branch not in branches:
-                    error(f"checked out branch {active_branch} is not in active_branches: {branches}")
+                active_branch = self.check_active_branch()
+                if not active_branch:
                     return True
+                
                 origin = self.commit(remote['name'] + "/" + active_branch)
 
                 if head != origin:
