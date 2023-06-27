@@ -3,8 +3,9 @@
 import yaml
 import git
 import os
+import traceback
+from logging import error, debug
 
-from logging import error
 
 class ManagedRepo(git.Repo):
 
@@ -147,7 +148,12 @@ class ManagedRepo(git.Repo):
         for remote in self.get_remotes():
             try:
                 head = self.commit()
-                origin = self.commit(remote['name'] + "/" + remote['branch'])
+                branches = self.get_config("active_branches").split(",")
+                active_branch = str(self.active_branch)
+                if active_branch not in branches:
+                    error(f"checked out branch {active_branch} is not in active_branches: {branches}")
+                    return True
+                origin = self.commit(remote['name'] + "/" + active_branch)
 
                 if head != origin:
                     # if we're the merge base then we're behind
@@ -158,6 +164,7 @@ class ManagedRepo(git.Repo):
                         return True
             except:
                 error(f"needs_merge failed for {self._path}")
+                debug(traceback.format_exc())
                 return True
 
         return False
