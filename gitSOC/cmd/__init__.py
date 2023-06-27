@@ -105,12 +105,14 @@ class Cmd(object):
         if self.regex and not (re.match("^\^",self.regex) or re.match("\$$",self.regex)):
             self.regex = ".*" + self.regex + ".*"
 
-    def run_cmd(self, command, path=None):
+    def run_cmd(self, command, path=None, append_errors=True):
         cwd = os.getcwd()
         if path:
             os.chdir(path)
         self.verbose("running '" + command + "' in " + str(path))
-        result = subprocess.getoutput(command)
+        (status, result) = subprocess.getstatusoutput(command)
+        if status != 0 and append_errors:
+            result += f"CMD ERROR: {status}"
         if path:
             os.chdir(cwd)
         return result
