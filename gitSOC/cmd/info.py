@@ -47,5 +47,9 @@ class Info(gitSOC.cmd.Cmd):
 
         file = open(linkname, "r")
         for line in file:
-            sys.stdout.write(line)
+            parts = line.split(":")
+            if len(parts) == 2:
+                print(f"{parts[0] + ':':<20} {parts[1].strip()}")
+            else:
+                sys.stdout.write(line)
 
