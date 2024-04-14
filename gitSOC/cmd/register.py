@@ -72,7 +72,7 @@ class Register(gitSOC.cmd.Cmd):
             exit(1)
 
         # save the yaml
-        repo.save()
+        repo.save(args.name, output)
 
         # create a sym link
         repo.create_symlink()
