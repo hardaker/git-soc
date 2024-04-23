@@ -17,8 +17,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "git",
-    "yaml"
+    "GitPython",
+    "pyaml",
+    "rich"
 ]
 
 [project.scripts]
@@ -32,6 +33,11 @@ path = "gitSOC/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
+    "/gitSOC",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [
     "/gitSOC",
 ]
 
