@@ -29,6 +29,12 @@ class Cmd(object):
     def output(self, stuff):
         self._outputs[threading.get_ident()].append(stuff)
 
+    def error(self, stuff):
+        self._outputs[threading.get_ident()].append("ERROR: " + stuff)
+
+    def warning(self, stuff):
+        self._outputs[threading.get_ident()].append("ERROR: " + stuff)
+
     @property
     def outputs(self):
         return self._outputs[threading.get_ident()]

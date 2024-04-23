@@ -4,7 +4,7 @@ import yaml
 import git
 import os
 import traceback
-from logging import error, debug
+from logging import error, debug, warning
 
 
 class ManagedRepo(git.Repo):
@@ -14,6 +14,7 @@ class ManagedRepo(git.Repo):
         self._initialized = False
         self._url = url
         self._config = repoconfig
+        self._current_command = None
         self.yaml_file = yaml_file
         self.soc = soc
 
@@ -38,6 +39,35 @@ class ManagedRepo(git.Repo):
     @property
     def path(self):
         return self._path
+
+    @property
+    def current_command(self):
+        """The current command object being used.
+
+        This is mostly useful for using erro/warning in threads"""
+        return self._current_command
+
+    def error(self, msg):
+        if self.current_command:
+            self.current_command.error(msg)
+        else:
+            error(msg)
+
+    def warning(self, msg):
+        if self.current_command:
+            self.current_command.warning(msg)
+        else:
+            warning(msg)
+
+    def output(self, msg):
+        if self.current_command:
+            self.current_command.output(msg)
+        else:
+            print(msg)
+            
+    @current_command.setter
+    def current_command(self, new_current_command):
+        self._current_command = new_current_command
 
     def load(self, filepath: str = None):
         if not filepath:
@@ -127,7 +157,7 @@ class ManagedRepo(git.Repo):
         branches = self.get_config("active_branches").split(",")
         active_branch = str(self.active_branch)
         if active_branch not in branches:
-            warning(f"checked out branch {active_branch} is not in active_branches: {branches}")
+            self.warning(f"checked out branch {active_branch} is not in active_branches: {branches}")
             return False
         return active_branch
         
@@ -179,7 +209,7 @@ class ManagedRepo(git.Repo):
                     elif self.merge_base(origin, head)[0] != origin:
                         return True
             except:
-                error(f"needs_merge failed for {self._path}")
+                self.error(f"needs_merge failed for {self._path}")
                 debug(traceback.format_exc())
                 return True
 
@@ -220,24 +250,24 @@ class ManagedRepo(git.Repo):
 
         # ensure this repo isn't registered somewhere
         if os.path.islink(linkname):
-            print("repository already registered; not re-linking")
-            print("  see link:    '" + linkname + "'")
-            print("  pointing to: '" + os.path.realpath(linkname) + "'")
+            self.output("repository already registered; not re-linking")
+            self.output("  see link:    '" + linkname + "'")
+            self.output("  pointing to: '" + os.path.realpath(linkname) + "'")
             return False
 
         if os.path.isdir(linkname) or os.path.isfile(linkname):
-            print("error: '" + linkname + " exists but isn't a symlink")
+            self.error(linkname + " exists but isn't a symlink")
             return False
 
         # ensure this registration doesn't exist yet 
         if name and os.path.isfile(name):
-            print("error: '" + name + "' already exists")
+            self.error(name + "' already exists")
             return False
 
         # create a sym link
-        print("symlink missing: " + linkname)
+        self.warning("symlink missing: " + linkname)
         if create:
-            print("will try to create it")
+            self.output("will try to create it")
             self.create_symlink()
 
         return True

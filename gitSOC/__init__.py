@@ -5,6 +5,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 import logging
 
+__VERSION__ = "0.1"
 
 class GitSOC(object):
 
@@ -41,6 +42,10 @@ class GitSOC(object):
             with ThreadPoolExecutor() as tpe:
                 for repo in sortedrepos:
                     if not repo.get_config('disabled', False):
+                        try:
+                            repo.current_command = operator.__self__
+                        except Exception:
+                            repo.current_command = None
                         handles.append(tpe.submit(operator, repo, otherargs))
                 for result in handles:
                     outputs = result.result()

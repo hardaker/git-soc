@@ -39,7 +39,7 @@ class Config(gitSOC.cmd.Cmd):
 
         yamlfile=repo.path() + "/.git/git-soc.yml"
         if not os.path.exists(yamlfile):
-            error("ERROR: broken (old?) registry -- no git-soc.yml link!!")
+            self.error("ERROR: broken (old?) registry -- no git-soc.yml link!!")
             return
 
         if args.set:
