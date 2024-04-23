@@ -7,7 +7,7 @@ import collections
 import logging
 try:
     from rich import print
-except Exeption:
+except Exception:
     pass
 
 class Cmd(object):
