@@ -27,13 +27,17 @@ class Cmd(gitSOC.cmd.Cmd):
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
         if 'command' not in parsed_args:
-            error("a command to run must be passed")
+            self.error("a command to run must be passed")
             exit(1)
         return parsed_args
 
     def run_actual(self, repo, args):
-        result = self.run_cmd(args.command, repo.path())
-        self.output(result)
+        try:
+            result = self.run_cmd(args.command, repo.path())
+        except Exception as e:
+            self.error(e)
+        else:
+            self.output(result)
 
         return self.return_and_clear_outputs()
 
