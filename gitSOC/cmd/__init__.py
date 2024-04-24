@@ -30,10 +30,13 @@ class Cmd(object):
         self._outputs[threading.get_ident()].append(stuff)
 
     def error(self, stuff):
-        self._outputs[threading.get_ident()].append("ERROR: " + stuff)
+        self._outputs[threading.get_ident()].append("ERRORxx: " + stuff)
 
     def warning(self, stuff):
-        self._outputs[threading.get_ident()].append("ERROR: " + stuff)
+        self._outputs[threading.get_ident()].append("WARNING: " + stuff)
+
+    def info(self, stuff):
+        self._outputs[threading.get_ident()].append("INFO: " + stuff)
 
     @property
     def outputs(self):
