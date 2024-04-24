@@ -46,7 +46,14 @@ class Pull(gitSOC.cmd.Cmd):
         if result == "clean":
             for base in repo.get_remotes():
                 self.verbose("pulling " + base['name'] + " -> " + repo.path() + ":")
-                remote = repo.remote(base['name'])
+
+                remote = None
+                try:
+                    remote = repo.remote(base['name'])
+                except Exception as e:
+                    self.error(e)
+                    result = "failed"
+
                 if remote:
 
                     try:
@@ -63,7 +70,7 @@ class Pull(gitSOC.cmd.Cmd):
                         else:
                             result = "[up to date]"
                     except Exception as e:
-                        error(e)
+                        self.error(e)
                         result = "failed"
                     except:
                         result = "failed"
