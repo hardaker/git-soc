@@ -8,6 +8,7 @@ import logging
 __VERSION__ = "0.1"
 
 class GitSOC(object):
+    """An object class to hold and process a collection of git repository on disk."""
 
     def __init__(self, paths = []):
         self.repos = []
@@ -36,6 +37,7 @@ class GitSOC(object):
             raise ValueError("unknown type returned from command " + type(outputs))
 
     def foreach_repo(self, operator, otherargs = None, threaded=True):
+        """Perform an operation (operator) on ever loaded repository"""
         sortedrepos = sorted(self.repos, key=lambda k: k.path())
         if threaded:
             handles = []
@@ -62,6 +64,7 @@ class GitSOC(object):
                 operator(repo, otherargs)
 
     def read_yaml_file(self, filepath):
+        """Load the contents of a yaml file from a path."""
         fh = open(filepath, "r")
         try:
             data = yaml.load(fh, Loader=yaml.FullLoader)
@@ -70,6 +73,7 @@ class GitSOC(object):
         return data
 
     def load_config_directory(self, directory, cmd):
+        """Find and load every YAML repository configuration in a directory structure."""
         for file in os.listdir(directory):
             yaml_file = os.path.join(directory, file)
             if (os.path.isfile(yaml_file) and file[-3:] == "yml"):
@@ -101,12 +105,5 @@ class GitSOC(object):
 
 if __name__ == "__main__":
     mrs = GitSOC(["."])
-    print(mrs)
-    #mrs.print_dirty_status()
 
-    baseargs = mrs.parse_global_args()
-    mrs.load_config_directory(baseargs['base'])
-    #mrs.print_dirty_status()    
-
-    print("got: " + mrs.pick_one("pick one", ["apple", "bananna", "Camel"]))
     
