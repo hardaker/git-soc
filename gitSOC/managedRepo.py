@@ -208,8 +208,8 @@ class ManagedRepo(git.Repo):
                     # if neither is, then we're diverged and need merge
                     elif self.merge_base(origin, head)[0] != origin:
                         return True
-            except:
-                self.error(f"needs_merge failed for {self._path}")
+            except Exception as e:
+                self.error(f"needs_merge failed for {self._path}: {e}")
                 debug(traceback.format_exc())
                 return True
 
