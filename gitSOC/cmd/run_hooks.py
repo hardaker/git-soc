@@ -24,29 +24,30 @@ class Run_hooks(gitSOC.cmd.Cmd):
         self.register_parsed_args(parsed_args)
         return parsed_args
 
-    def run_hooks(self, repo, args = None):
+    def run_hooks(self, repo, hook):
+        if repo.get_config(hook):
+            self.verbose(f"Running {hook} in {repo.path}")
+            if hook == "auto_commit":  # TODO: ick
+                import gitSOC.hooks.auto_commit as autocommit
+                hook_obj = autocommit.AutoCommit(self.soc)
+                result = hook_obj.run_hook(repo)
+            elif hook == "auto_add":  # TODO: ick
+                import gitSOC.hooks.auto_add as autoadd
+                hook_obj = autoadd.AutoAdd(self.soc)
+                result = hook_obj.run_hook(repo)
+            else:
+                self.error(f"unknown hook: '{hook}'!")
+                result = "unknown hook"
 
+            # display the results
+            self.output("%-60s %s" % (repo.path(), result))
+        else:
+            self.verbose(f"skipping {hook} -- not configured")
+
+        return self.return_and_clear_outputs()
+
+    def run(self, args, *other_args, **kwargs):
         hook_list = ["auto_add", "auto_commit"]  # TODO: ick -- make setable
         for hook in hook_list:
-            if repo.get_config(hook):
-                if hook == "auto_commit":  # TODO: ick
-                    import gitSOC.hooks.auto_commit as autocommit
-                    hook_obj = autocommit.AutoCommit(self.soc)
-                    result = hook_obj.run_hook(repo)
-                elif hook == "auto_add":  # TODO: ick
-                    import gitSOC.hooks.auto_add as autoadd
-                    hook_obj = autoadd.AutoAdd(self.soc)
-                    result = hook_obj.run_hook(repo)
-                else:
-                    self.error(f"unknown hook: '{hook}'!")
-                    result = "unknown hook"
-
-                # display the results
-                self.output("%-60s %s" % (repo.path(), result))
-            else:
-                self.verbose(f"skipping {hook} -- not configured")
-        return self.return_and_clear_outputs()
-                
-    def run(self, args, *other_args, **kwargs):
-        self.verbose("running auto_commit")
-        return self.soc.foreach_repo(self.run_hooks, args)
+            self.verbose(f"running hook:{hook}")
+            return self.soc.foreach_repo(self.run_hooks, hook)
