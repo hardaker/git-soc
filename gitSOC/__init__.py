@@ -5,7 +5,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 import logging
 
-__VERSION__ = "0.1"
+__VERSION__ = "0.2"
 
 class GitSOC(object):
     """An object class to hold and process a collection of git repository on disk."""
