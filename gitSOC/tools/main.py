@@ -19,6 +19,7 @@ import gitSOC.cmd.config
 import gitSOC.cmd.linkup
 import gitSOC.cmd.disable
 import gitSOC.cmd.enable
+import gitSOC.cmd.run_hooks
 
 import sys
 
