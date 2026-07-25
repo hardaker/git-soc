@@ -12,13 +12,13 @@ class Run_hooks(gitSOC.cmd.Cmd):
 
     def __init__(self, soc, baseargs = {}):
         gitSOC.cmd.Cmd.__init__(self, soc, baseargs, name="hooks",
-                                description = "Runs all the registered hooks for each repository.")
+                                description = "Runs all the registered hooks for each repository.  To use these hooks, add 'auto_add: true' and/or 'auto_commit: commit message' to a repos configuration file.")
         self.soc = soc
 
     def parse_args(self, args):
         p = argparse.ArgumentParser(parents=[self.get_global_parse_args()],
                                     prog="git-soc run_hooks",
-                                    description="Runs all the registered hooks for each repository.",
+                                    description="Runs all the registered hooks for each repository.  To use these hooks, add 'auto_add: true' and/or 'auto_commit: commit message' to a repos configuration file.",
                                     epilog="Example: git soc run_hooks")
         parsed_args = p.parse_args(args = args)
         self.register_parsed_args(parsed_args)
