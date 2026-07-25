@@ -22,6 +22,8 @@ class ManagedRepo(git.Repo):
             'disabled': False,
             'remotes': 'origin/main',
             'active_branches': 'main,master',
+            'auto_add': False,
+            'auto_commit': '',
         }
 
         self.init_repo()
