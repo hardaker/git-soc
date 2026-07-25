@@ -54,7 +54,7 @@ def main():
         print("\nCommands available that act on the current repo:")
         print("    " + "\n    ".join(["register","info","config","enable","disable",]))
         print("\nCommands available that act on all repos:")
-        print("    " + "\n    ".join(["status","interactive","pull","push","pushpull","command", "enable", "disable"]))
+        print("    " + "\n    ".join(["status","interactive","pull","push","pushpull","command", "enable", "disable", "run_hooks"]))
         print("\nSee the --help output of each command for further details")
         exit(0)
 
