@@ -22,6 +22,8 @@ project.
 
 # Install
 
+    uv tool install git-soc
+       or
     pip install git-soc
 
 # Usage examples:
