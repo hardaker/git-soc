@@ -49,5 +49,4 @@ class Run_hooks(gitSOC.cmd.Cmd):
     def run(self, args, *other_args, **kwargs):
         hook_list = ["auto_add", "auto_commit"]  # TODO: ick -- make setable
         for hook in hook_list:
-            self.verbose(f"running hook:{hook}")
-            return self.soc.foreach_repo(self.run_hooks, hook)
+            self.soc.foreach_repo(self.run_hooks, hook)
